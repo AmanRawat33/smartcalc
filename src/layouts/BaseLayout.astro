@@ -1,0 +1,126 @@
+---
+import GoogleSiteVerification from '../components/GoogleSiteVerification.astro';
+import '../styles/global.css';
+
+type Seo = {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  ogImage?: string;
+};
+
+type NavItem = { href: string; label: string };
+type Alternate = { hreflang: string; href: string };
+
+const {
+  seo,
+  noindex = false,
+  jsonLd,
+  breadcrumbs,
+  lang = 'en',
+  navItems,
+  alternates,
+} = Astro.props as {
+  seo: Seo;
+  noindex?: boolean;
+  jsonLd?: unknown | unknown[];
+  breadcrumbs?: { name: string; path: string }[];
+  lang?: string;
+  navItems?: NavItem[];
+  alternates?: Alternate[];
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+const canonicalUrl = new URL(seo.canonicalPath, site).toString();
+const ogImageUrl = seo.ogImage ? new URL(seo.ogImage, site).toString() : undefined;
+
+const jsonLdList = ((): unknown[] => {
+  if (!jsonLd) return [];
+  return Array.isArray(jsonLd) ? jsonLd : [jsonLd];
+})();
+
+const defaultNavItems: NavItem[] = [
+  { href: '/percentage-calculator/', label: 'Percentage' },
+  { href: '/age-calculator/', label: 'Age' },
+  { href: '/gst-calculator-india/', label: 'GST (India)' },
+  { href: '/emi-calculator/', label: 'EMI' },
+  { href: '/compound-interest-calculator/', label: 'Compound Interest' },
+  { href: '/date-difference-calculator/', label: 'Date Difference' },
+  { href: '/discount-calculator/', label: 'Discount' },
+  { href: '/bmi-calculator/', label: 'BMI' },
+  { href: '/about/', label: 'About' },
+  { href: '/contact/', label: 'Contact' },
+  { href: '/privacy-policy/', label: 'Privacy' },
+  { href: '/hi/', label: 'हिंदी' },
+];
+
+const nav = navItems ?? defaultNavItems;
+
+const breadcrumbsJsonLd = (() => {
+  if (!breadcrumbs || breadcrumbs.length < 2) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbs.map((b, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1,
+      name: b.name,
+      item: new URL(b.path, site).toString(),
+    })),
+  };
+})();
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{seo.title}</title>
+    <GoogleSiteVerification />
+    <meta name="description" content={seo.description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex ? <meta name="robots" content="noindex,nofollow" /> : null}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
+    <meta property="og:url" content={canonicalUrl} />
+    {ogImageUrl ? <meta property="og:image" content={ogImageUrl} /> : null}
+
+    <meta name="twitter:card" content={ogImageUrl ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={seo.title} />
+    <meta name="twitter:description" content={seo.description} />
+    {ogImageUrl ? <meta name="twitter:image" content={ogImageUrl} /> : null}
+
+    {alternates?.map((a) => (
+      <link rel="alternate" hreflang={a.hreflang} href={a.href} />
+    ))}
+
+    {[...jsonLdList, ...(breadcrumbsJsonLd ? [breadcrumbsJsonLd] : [])].map((obj) => (
+      <script type="application/ld+json" set:html={JSON.stringify(obj)} />
+    ))}
+  </head>
+  <body>
+    <div class="container">
+      <header class="nav">
+        <a class="brand" href="/">
+          <span class="brandDot" aria-hidden="true"></span>
+          <span>QuickTools</span>
+        </a>
+        <nav class="navLinks" aria-label="Primary">
+          {nav.map((i) => <a href={i.href}>{i.label}</a>)}
+        </nav>
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer class="muted small" style="margin-top: 28px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+        <span>© {new Date().getFullYear()} QuickTools. Built for speed.</span>
+        <span>
+          <a href="/about/">About</a> · <a href="/contact/">Contact</a> · <a href="/privacy-policy/">Privacy</a>
+        </span>
+      </footer>
+    </div>
+  </body>
+</html>
+

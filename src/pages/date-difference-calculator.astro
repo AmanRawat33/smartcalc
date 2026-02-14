@@ -1,0 +1,185 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+
+const seo = {
+  title: 'Date Difference Calculator (Days Between Dates)',
+  description: 'Free date difference calculator to find the number of days between two dates. Also shows weeks and remaining days.',
+  canonicalPath: '/date-difference-calculator/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Date Difference Calculator',
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    url: `${site}/date-difference-calculator/`,
+    description: seo.description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'How do you calculate days between two dates?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Convert both dates to timestamps and subtract, then divide by 86,400,000 (milliseconds per day). This calculator handles it automatically.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is the date difference inclusive or exclusive?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'This calculator shows the exact day difference between the two selected dates. You can optionally toggle inclusive counting.',
+        },
+      },
+    ],
+  },
+];
+
+const breadcrumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Date Difference Calculator', path: '/date-difference-calculator/' },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd} breadcrumbs={breadcrumbs}>
+  <section class="card contentCard">
+    <Breadcrumbs items={breadcrumbs} />
+    <h1>Date difference calculator</h1>
+    <p>Find the number of days between two dates (with an optional inclusive toggle).</p>
+
+    <section class="card" style="padding: 14px; margin-top: 12px;">
+      <div class="fieldRow">
+        <div>
+          <label for="from">From date</label>
+          <input id="from" type="date" />
+        </div>
+        <div>
+          <label for="to">To date</label>
+          <input id="to" type="date" />
+        </div>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top: 10px; flex-wrap:wrap; align-items:center;">
+        <label style="display:flex; gap:8px; align-items:center; margin:0;">
+          <input id="inclusive" type="checkbox" style="width:auto;" />
+          <span class="muted small">Inclusive (count both start and end date)</span>
+        </label>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap;">
+        <button id="calcBtn" type="button">Calculate</button>
+        <button id="swapBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Swap</button>
+        <button id="clearBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Clear</button>
+      </div>
+
+      <div id="result" class="result" aria-live="polite">
+        <div class="muted small">Result will appear here.</div>
+      </div>
+    </section>
+
+    <section style="margin-top: 18px;">
+      <h2>What is a date difference calculator?</h2>
+      <p>
+        A <strong>date difference calculator</strong> tells you how much time lies between two calendar dates.
+        People use it for project planning, travel, subscriptions, billing cycles, and tracking deadlines.
+        The most common query is “days between dates”, which is exactly what this tool computes.
+      </p>
+
+      <h2>How to calculate days between two dates</h2>
+      <p>
+        The simplest method is to convert both dates into a numeric time value and subtract.
+        This calculator uses local calendar dates to avoid timezone surprises. If you enable
+        <strong>inclusive counting</strong>, it adds 1 day so both the start and end dates are included.
+      </p>
+
+      <h2>Why use this online date difference calculator?</h2>
+      <p>
+        It’s fast, mobile-friendly, and shows a breakdown into weeks + remaining days.
+        This helps when you want to think in “weeks” rather than large day counts.
+      </p>
+    </section>
+  </section>
+
+  <script type="module">
+    const $ = (id) => document.getElementById(id);
+    const fromEl = $('from');
+    const toEl = $('to');
+    const inclusiveEl = $('inclusive');
+    const resultEl = $('result');
+
+    function pad2(n) { return String(n).padStart(2, '0'); }
+    function toISODate(d) { return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; }
+
+    function parseDate(v) {
+      if (!v) return null;
+      const [y, m, d] = v.split('-').map(Number);
+      if (!y || !m || !d) return null;
+      return new Date(y, m - 1, d);
+    }
+
+    function render(html) {
+      resultEl.innerHTML = html;
+      resultEl.classList.remove('fadeIn');
+      void resultEl.offsetWidth;
+      resultEl.classList.add('fadeIn');
+    }
+
+    function calc() {
+      const from = parseDate(fromEl.value);
+      const to = parseDate(toEl.value);
+      const inclusive = inclusiveEl.checked;
+
+      if (!from || !to) {
+        render('<div class="muted small">Select both dates.</div>');
+        return;
+      }
+
+      const msPerDay = 24 * 60 * 60 * 1000;
+      let days = Math.round((to - from) / msPerDay);
+      if (inclusive) days += (days >= 0 ? 1 : -1);
+
+      const absDays = Math.abs(days);
+      const weeks = Math.floor(absDays / 7);
+      const remDays = absDays % 7;
+
+      render(`
+        <div>
+          <div><strong>Days:</strong> ${days.toLocaleString()}</div>
+          <div class="muted small" style="margin-top:6px;">Equivalent: ${weeks} week(s) and ${remDays} day(s)</div>
+        </div>
+      `);
+    }
+
+    $('calcBtn').addEventListener('click', calc);
+    $('swapBtn').addEventListener('click', () => {
+      const tmp = fromEl.value;
+      fromEl.value = toEl.value;
+      toEl.value = tmp;
+      calc();
+    });
+    $('clearBtn').addEventListener('click', () => {
+      fromEl.value = '';
+      toEl.value = '';
+      inclusiveEl.checked = false;
+      render('<div class="muted small">Result will appear here.</div>');
+      fromEl.focus();
+    });
+
+    // Defaults (last 30 days)
+    const today = new Date();
+    const fromDefault = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
+    fromEl.value = toISODate(fromDefault);
+    toEl.value = toISODate(today);
+    [fromEl, toEl, inclusiveEl].forEach((el) => el.addEventListener('input', () => calc()));
+    calc();
+  </script>
+</BaseLayout>
+

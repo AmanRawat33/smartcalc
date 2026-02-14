@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const seo = {
+  title: 'Online Calculators (Fast & Free) – Percentage, Age, GST',
+  description: 'Fast, simple online calculators: percentage calculator, age calculator by date of birth, and GST calculator for India.',
+  canonicalPath: '/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'QuickTools',
+    url: `${site}/`,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${site}/?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd}>
+  <section class="card hero">
+    <h1>Fast online calculators</h1>
+    <p>
+      Minimal, mobile-friendly tools that load instantly. Pick a calculator below.
+    </p>
+  </section>
+
+  <section style="margin-top: 14px;">
+    <div class="grid">
+      <a class="card toolLink" href="/percentage-calculator/">
+        <strong>Percentage calculator online</strong>
+        <span>Find X% of Y, percent change, and “X is what % of Y”.</span>
+      </a>
+      <a class="card toolLink" href="/age-calculator/">
+        <strong>Age calculator by date of birth</strong>
+        <span>Calculate age in years, months and days (DOB → today).</span>
+      </a>
+      <a class="card toolLink" href="/gst-calculator-india/">
+        <strong>GST calculator online (India)</strong>
+        <span>Add/remove GST at 0%, 5%, 12%, 18%, 28%.</span>
+      </a>
+      <a class="card toolLink" href="/emi-calculator/">
+        <strong>EMI calculator online</strong>
+        <span>Monthly EMI, total interest, and total payable amount.</span>
+      </a>
+      <a class="card toolLink" href="/compound-interest-calculator/">
+        <strong>Compound interest calculator</strong>
+        <span>Future value, interest earned, and growth over time.</span>
+      </a>
+      <a class="card toolLink" href="/date-difference-calculator/">
+        <strong>Date difference calculator</strong>
+        <span>Days between dates + weeks breakdown.</span>
+      </a>
+      <a class="card toolLink" href="/discount-calculator/">
+        <strong>Discount calculator</strong>
+        <span>Percent off, sale price, and savings.</span>
+      </a>
+      <a class="card toolLink" href="/bmi-calculator/">
+        <strong>BMI calculator</strong>
+        <span>Body Mass Index (metric + imperial) with category.</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+

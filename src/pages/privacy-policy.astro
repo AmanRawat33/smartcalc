@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const seo = {
+  title: 'Privacy Policy – QuickTools',
+  description: 'Privacy policy for QuickTools calculators website.',
+  canonicalPath: '/privacy-policy/',
+};
+---
+<BaseLayout seo={seo}>
+  <section class="card contentCard">
+    <h1>Privacy Policy</h1>
+    <p class="muted small">Last updated: {new Date().toISOString().slice(0, 10)}</p>
+    <p>
+      QuickTools provides simple calculator tools. We do not ask for accounts or collect personal information directly.
+    </p>
+    <h2>Analytics & Ads</h2>
+    <p>
+      We may add analytics and advertising (for example, Google AdSense) in the future. If/when we do, this page will be updated.
+    </p>
+    <h2>Contact</h2>
+    <p>
+      If you have questions, you can contact us from the Contact page (coming soon).
+    </p>
+  </section>
+</BaseLayout>
+

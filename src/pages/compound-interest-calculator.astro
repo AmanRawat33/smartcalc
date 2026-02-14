@@ -1,0 +1,240 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+
+const seo = {
+  title: 'Compound Interest Calculator (Free Online)',
+  description: 'Free compound interest calculator to estimate future value, total interest, and ending balance with principal, rate, time and compounding frequency.',
+  canonicalPath: '/compound-interest-calculator/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Compound Interest Calculator',
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Any',
+    url: `${site}/compound-interest-calculator/`,
+    description: seo.description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What is compound interest?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Compound interest is interest calculated on the initial principal plus the accumulated interest from previous periods.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What is the compound interest formula?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'A = P × (1 + r/n)^(n×t), where P=principal, r=annual rate (decimal), n=compounds per year, t=years, and A=final amount.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What is the difference between simple and compound interest?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Simple interest is calculated only on the principal. Compound interest grows on principal plus previously earned interest.',
+        },
+      },
+    ],
+  },
+];
+
+const breadcrumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Compound Interest Calculator', path: '/compound-interest-calculator/' },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd} breadcrumbs={breadcrumbs}>
+  <section class="card contentCard">
+    <Breadcrumbs items={breadcrumbs} />
+    <h1>Compound interest calculator</h1>
+    <p>
+      Estimate future value and total interest for savings or investments using compound interest.
+    </p>
+
+    <section class="card" style="padding: 14px; margin-top: 12px;">
+      <div class="fieldRow">
+        <div>
+          <label for="principal">Principal (starting amount)</label>
+          <input id="principal" inputmode="decimal" placeholder="e.g. 10000" />
+        </div>
+        <div>
+          <label for="rate">Annual interest rate (%)</label>
+          <input id="rate" inputmode="decimal" placeholder="e.g. 8" />
+        </div>
+      </div>
+
+      <div class="fieldRow" style="margin-top: 10px;">
+        <div>
+          <label for="years">Time (years)</label>
+          <input id="years" inputmode="decimal" placeholder="e.g. 10" />
+        </div>
+        <div>
+          <label for="compound">Compounding</label>
+          <select id="compound">
+            <option value="1">Yearly</option>
+            <option value="4">Quarterly</option>
+            <option value="12" selected>Monthly</option>
+            <option value="365">Daily</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fieldRow" style="margin-top: 10px;">
+        <div>
+          <label for="contrib">Extra contribution per period (optional)</label>
+          <input id="contrib" inputmode="decimal" placeholder="e.g. 100 (monthly)" />
+        </div>
+        <div>
+          <label for="decimals">Decimals</label>
+          <select id="decimals">
+            <option value="0">0</option>
+            <option value="2" selected>2</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap;">
+        <button id="calcBtn" type="button">Calculate</button>
+        <button id="clearBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Clear</button>
+      </div>
+
+      <div id="result" class="result" aria-live="polite">
+        <div class="muted small">Result will appear here.</div>
+      </div>
+    </section>
+
+    <section style="margin-top: 18px;">
+      <h2>What is compound interest?</h2>
+      <p>
+        <strong>Compound interest</strong> means you earn interest on your original principal and on the interest you’ve already earned.
+        This “interest on interest” effect is why compounding is powerful over long periods. The more frequently interest compounds
+        (monthly vs yearly), the faster the balance can grow, assuming the same annual rate.
+      </p>
+
+      <h2>How to calculate compound interest</h2>
+      <p>
+        For a one-time deposit, the standard formula is:
+        <strong>A = P × (1 + r/n)^(n×t)</strong>.
+        Here, <strong>P</strong> is principal, <strong>r</strong> is annual rate as a decimal (8% → 0.08),
+        <strong>n</strong> is compounding frequency per year, and <strong>t</strong> is time in years.
+        This calculator also supports optional contributions each period (for example, adding a fixed amount every month).
+      </p>
+
+      <h2>Compound interest formula</h2>
+      <div class="card" style="padding: 14px; margin-bottom: 10px;">
+        <p><strong>Final amount</strong>: A = P × (1 + r/n)^(n×t)</p>
+        <p><strong>Total interest</strong>: A − P (ignoring contributions)</p>
+      </div>
+
+      <h2>Why use this online compound interest calculator?</h2>
+      <p>
+        It helps you compare scenarios quickly: different rates, different time horizons, and different compounding frequencies.
+        It’s useful for planning savings goals, evaluating investment growth assumptions, and understanding how long-term
+        compounding changes outcomes even with small rate differences.
+      </p>
+    </section>
+  </section>
+
+  <script type="module">
+    const $ = (id) => document.getElementById(id);
+    const pEl = $('principal');
+    const rEl = $('rate');
+    const yEl = $('years');
+    const nEl = $('compound');
+    const cEl = $('contrib');
+    const dEl = $('decimals');
+    const resultEl = $('result');
+
+    function parseNum(v) {
+      if (!v) return NaN;
+      const n = Number(String(v).replace(/,/g, ''));
+      return Number.isFinite(n) ? n : NaN;
+    }
+    function fmt(n, decimals) {
+      if (!Number.isFinite(n)) return '';
+      return n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+    }
+    function render(html) {
+      resultEl.innerHTML = html;
+      resultEl.classList.remove('fadeIn');
+      void resultEl.offsetWidth;
+      resultEl.classList.add('fadeIn');
+    }
+
+    function calc() {
+      const P = parseNum(pEl.value);
+      const ratePct = parseNum(rEl.value);
+      const years = parseNum(yEl.value);
+      const n = parseNum(nEl.value);
+      const contrib = parseNum(cEl.value || '0');
+      const decimals = Number(dEl.value || 2);
+
+      if (!Number.isFinite(P) || !Number.isFinite(ratePct) || !Number.isFinite(years) || !Number.isFinite(n)) {
+        render('<div class="muted small">Enter valid principal, rate, and time.</div>');
+        return;
+      }
+      if (P < 0 || years < 0 || ratePct < 0 || n <= 0) {
+        render('<div class="muted small">Values must be non-negative. Compounding must be > 0.</div>');
+        return;
+      }
+
+      const r = ratePct / 100;
+      const periods = Math.round(years * n);
+      const perRate = r / n;
+
+      let amount = P;
+      let totalContrib = 0;
+      // Period-by-period model supports contributions cleanly without confusion
+      for (let i = 0; i < periods; i++) {
+        amount = amount * (1 + perRate);
+        if (Number.isFinite(contrib) && contrib > 0) {
+          amount += contrib;
+          totalContrib += contrib;
+        }
+      }
+
+      const ending = amount;
+      const invested = P + totalContrib;
+      const interest = ending - invested;
+
+      render(`
+        <div>
+          <div><strong>Ending balance:</strong> ${fmt(ending, decimals)}</div>
+          <div style="margin-top:6px;"><strong>Total contributions:</strong> ${fmt(totalContrib, decimals)}</div>
+          <div style="margin-top:6px;"><strong>Total interest earned:</strong> ${fmt(interest, decimals)}</div>
+          <div class="muted small" style="margin-top:6px;">Compounding periods: ${periods.toLocaleString()}</div>
+        </div>
+      `);
+    }
+
+    $('calcBtn').addEventListener('click', calc);
+    $('clearBtn').addEventListener('click', () => {
+      pEl.value = '';
+      rEl.value = '';
+      yEl.value = '';
+      cEl.value = '';
+      nEl.value = '12';
+      dEl.value = '2';
+      render('<div class="muted small">Result will appear here.</div>');
+      pEl.focus();
+    });
+
+    [pEl, rEl, yEl, nEl, cEl, dEl].forEach((el) => el.addEventListener('input', () => calc()));
+  </script>
+</BaseLayout>
+

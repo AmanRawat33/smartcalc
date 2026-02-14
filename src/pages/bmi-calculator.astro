@@ -1,0 +1,254 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+
+const seo = {
+  title: 'BMI Calculator (Body Mass Index) – Free Online',
+  description: 'Free BMI calculator to compute Body Mass Index from height and weight. Supports metric and imperial units and shows BMI category.',
+  canonicalPath: '/bmi-calculator/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'BMI Calculator',
+    applicationCategory: 'HealthApplication',
+    operatingSystem: 'Any',
+    url: `${site}/bmi-calculator/`,
+    description: seo.description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What is BMI?',
+        acceptedAnswer: { '@type': 'Answer', text: 'BMI (Body Mass Index) is a screening measure based on weight and height: BMI = weight / height².' },
+      },
+      {
+        '@type': 'Question',
+        name: 'What are the BMI categories?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Common adult categories: underweight <18.5, normal 18.5–24.9, overweight 25–29.9, obese ≥30.' },
+      },
+    ],
+  },
+];
+
+const breadcrumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'BMI Calculator', path: '/bmi-calculator/' },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd} breadcrumbs={breadcrumbs}>
+  <section class="card contentCard">
+    <Breadcrumbs items={breadcrumbs} />
+    <h1>BMI calculator</h1>
+    <p>Calculate Body Mass Index (BMI) using height and weight (metric or imperial).</p>
+
+    <section class="card" style="padding: 14px; margin-top: 12px;">
+      <div class="fieldRow">
+        <div>
+          <label for="unit">Units</label>
+          <select id="unit">
+            <option value="metric" selected>Metric (kg, cm)</option>
+            <option value="imperial">Imperial (lb, ft/in)</option>
+          </select>
+        </div>
+        <div>
+          <label for="decimals">Decimals</label>
+          <select id="decimals">
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="metricFields" class="fieldRow" style="margin-top: 10px;">
+        <div>
+          <label for="weightKg">Weight (kg)</label>
+          <input id="weightKg" inputmode="decimal" placeholder="e.g. 70" />
+        </div>
+        <div>
+          <label for="heightCm">Height (cm)</label>
+          <input id="heightCm" inputmode="decimal" placeholder="e.g. 175" />
+        </div>
+      </div>
+
+      <div id="imperialFields" style="margin-top: 10px; display:none;">
+        <div class="fieldRow">
+          <div>
+            <label for="weightLb">Weight (lb)</label>
+            <input id="weightLb" inputmode="decimal" placeholder="e.g. 154" />
+          </div>
+          <div>
+            <label for="heightFt">Height (ft)</label>
+            <input id="heightFt" inputmode="numeric" placeholder="e.g. 5" />
+          </div>
+        </div>
+        <div class="fieldRow" style="margin-top: 10px;">
+          <div>
+            <label for="heightIn">Height (in)</label>
+            <input id="heightIn" inputmode="numeric" placeholder="e.g. 9" />
+          </div>
+          <div>
+            <label for="gender">Gender (optional)</label>
+            <select id="gender">
+              <option value="" selected>Not specified</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap;">
+        <button id="calcBtn" type="button">Calculate</button>
+        <button id="clearBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Clear</button>
+      </div>
+
+      <div id="result" class="result" aria-live="polite">
+        <div class="muted small">Result will appear here.</div>
+      </div>
+
+      <p class="muted small" style="margin-top: 10px;">
+        Note: BMI is a screening metric and doesn’t directly measure body fat or health. Consider professional guidance for medical decisions.
+      </p>
+    </section>
+
+    <section style="margin-top: 18px;">
+      <h2>What is BMI?</h2>
+      <p>
+        <strong>BMI (Body Mass Index)</strong> is a simple number based on your height and weight. It’s commonly used as a quick screening tool
+        to categorize weight status in adults. BMI is easy to compute and helps compare body size across populations.
+      </p>
+
+      <h2>How to calculate BMI</h2>
+      <p>
+        In metric units, BMI is calculated as <strong>weight (kg) / height (m)²</strong>. In imperial units, it’s commonly computed as
+        <strong>703 × weight (lb) / height (in)²</strong>. This calculator supports both and shows your BMI category using standard adult ranges.
+      </p>
+
+      <h2>BMI formula</h2>
+      <div class="card" style="padding: 14px; margin-bottom: 10px;">
+        <p><strong>Metric</strong>: BMI = kg / m²</p>
+        <p><strong>Imperial</strong>: BMI = 703 × lb / in²</p>
+      </div>
+
+      <h2>Why use this online BMI calculator?</h2>
+      <p>
+        It’s fast and avoids calculation mistakes when converting centimeters to meters or feet/inches to inches. Use it to track changes over time
+        or for quick checks. If you’re an athlete or have a higher muscle mass, BMI may not reflect body composition accurately.
+      </p>
+    </section>
+  </section>
+
+  <script type="module">
+    const $ = (id) => document.getElementById(id);
+    const unitEl = $('unit');
+    const decimalsEl = $('decimals');
+    const metricFields = $('metricFields');
+    const imperialFields = $('imperialFields');
+    const resultEl = $('result');
+
+    const weightKgEl = $('weightKg');
+    const heightCmEl = $('heightCm');
+    const weightLbEl = $('weightLb');
+    const heightFtEl = $('heightFt');
+    const heightInEl = $('heightIn');
+
+    function parseNum(v) {
+      if (!v) return NaN;
+      const n = Number(String(v).replace(/,/g, ''));
+      return Number.isFinite(n) ? n : NaN;
+    }
+    function fmt(n, decimals) {
+      if (!Number.isFinite(n)) return '';
+      return n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+    }
+    function render(html) {
+      resultEl.innerHTML = html;
+      resultEl.classList.remove('fadeIn');
+      void resultEl.offsetWidth;
+      resultEl.classList.add('fadeIn');
+    }
+
+    function category(bmi) {
+      if (bmi < 18.5) return 'Underweight';
+      if (bmi < 25) return 'Normal weight';
+      if (bmi < 30) return 'Overweight';
+      return 'Obesity';
+    }
+
+    function calc() {
+      const decimals = Number(decimalsEl.value || 1);
+      const unit = unitEl.value;
+
+      let bmi = NaN;
+      if (unit === 'metric') {
+        const kg = parseNum(weightKgEl.value);
+        const cm = parseNum(heightCmEl.value);
+        if (!Number.isFinite(kg) || !Number.isFinite(cm) || kg <= 0 || cm <= 0) {
+          render('<div class="muted small">Enter valid height and weight.</div>');
+          return;
+        }
+        const m = cm / 100;
+        bmi = kg / (m * m);
+      } else {
+        const lb = parseNum(weightLbEl.value);
+        const ft = parseNum(heightFtEl.value);
+        const inch = parseNum(heightInEl.value || '0');
+        if (!Number.isFinite(lb) || !Number.isFinite(ft) || !Number.isFinite(inch) || lb <= 0 || ft <= 0 || inch < 0) {
+          render('<div class="muted small">Enter valid height and weight.</div>');
+          return;
+        }
+        const totalIn = (ft * 12) + inch;
+        if (totalIn <= 0) {
+          render('<div class="muted small">Height must be > 0.</div>');
+          return;
+        }
+        bmi = 703 * lb / (totalIn * totalIn);
+      }
+
+      const cat = category(bmi);
+      render(`
+        <div>
+          <div><strong>BMI:</strong> ${fmt(bmi, decimals)}</div>
+          <div style="margin-top:6px;"><strong>Category:</strong> ${cat}</div>
+          <div class="muted small" style="margin-top:6px;">Adult BMI ranges: under 18.5, 18.5–24.9, 25–29.9, 30+</div>
+        </div>
+      `);
+    }
+
+    function syncUnit() {
+      const unit = unitEl.value;
+      if (unit === 'metric') {
+        metricFields.style.display = '';
+        imperialFields.style.display = 'none';
+      } else {
+        metricFields.style.display = 'none';
+        imperialFields.style.display = '';
+      }
+      calc();
+    }
+
+    $('calcBtn').addEventListener('click', calc);
+    $('clearBtn').addEventListener('click', () => {
+      [weightKgEl, heightCmEl, weightLbEl, heightFtEl, heightInEl].forEach((el) => (el.value = ''));
+      decimalsEl.value = '1';
+      unitEl.value = 'metric';
+      syncUnit();
+      render('<div class="muted small">Result will appear here.</div>');
+      weightKgEl.focus();
+    });
+
+    [unitEl, decimalsEl, weightKgEl, heightCmEl, weightLbEl, heightFtEl, heightInEl].forEach((el) => el.addEventListener('input', () => calc()));
+    unitEl.addEventListener('change', syncUnit);
+    syncUnit();
+  </script>
+</BaseLayout>
+

@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const seo = {
+  title: 'ऑनलाइन कैलकुलेटर (तेज़ और मुफ़्त) – Percentage, Age, GST, EMI',
+  description: 'तेज़ और आसान ऑनलाइन कैलकुलेटर: प्रतिशत, उम्र (DOB), GST, EMI, कंपाउंड इंटरेस्ट, तारीखों का अंतर, डिस्काउंट और BMI.',
+  canonicalPath: '/hi/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const alternates = [
+  { hreflang: 'en', href: `${site}/` },
+  { hreflang: 'hi', href: `${site}/hi/` },
+  { hreflang: 'x-default', href: `${site}/` },
+];
+
+const navItems = [
+  { href: '/hi/percentage-calculator/', label: 'प्रतिशत' },
+  { href: '/hi/age-calculator/', label: 'उम्र' },
+  { href: '/hi/gst-calculator-india/', label: 'GST' },
+  { href: '/hi/emi-calculator/', label: 'EMI' },
+  { href: '/hi/compound-interest-calculator/', label: 'कंपाउंड' },
+  { href: '/hi/date-difference-calculator/', label: 'तारीख' },
+  { href: '/hi/discount-calculator/', label: 'डिस्काउंट' },
+  { href: '/hi/bmi-calculator/', label: 'BMI' },
+  { href: '/', label: 'English' },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'QuickTools (Hindi)',
+    url: `${site}/hi/`,
+  },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd} lang="hi" navItems={navItems} alternates={alternates}>
+  <section class="card hero">
+    <h1>तेज़ ऑनलाइन कैलकुलेटर</h1>
+    <p>
+      आसान, मोबाइल-फ्रेंडली टूल्स जो तुरंत लोड होते हैं। नीचे से कोई कैलकुलेटर चुनें।
+    </p>
+  </section>
+
+  <section style="margin-top: 14px;">
+    <div class="grid">
+      <a class="card toolLink" href="/hi/percentage-calculator/">
+        <strong>Percentage calculator (प्रतिशत)</strong>
+        <span>X% of Y, percent change और “X is what % of Y”.</span>
+      </a>
+      <a class="card toolLink" href="/hi/age-calculator/">
+        <strong>Age calculator (DOB से उम्र)</strong>
+        <span>Years, months और days में उम्र निकालें।</span>
+      </a>
+      <a class="card toolLink" href="/hi/gst-calculator-india/">
+        <strong>GST calculator (India)</strong>
+        <span>GST add/remove: 0%, 5%, 12%, 18%, 28%.</span>
+      </a>
+      <a class="card toolLink" href="/hi/emi-calculator/">
+        <strong>EMI calculator</strong>
+        <span>Monthly EMI + total interest + total payable.</span>
+      </a>
+      <a class="card toolLink" href="/hi/compound-interest-calculator/">
+        <strong>Compound interest calculator</strong>
+        <span>Future value और interest earned.</span>
+      </a>
+      <a class="card toolLink" href="/hi/date-difference-calculator/">
+        <strong>Date difference calculator</strong>
+        <span>Days between dates + weeks breakdown.</span>
+      </a>
+      <a class="card toolLink" href="/hi/discount-calculator/">
+        <strong>Discount calculator</strong>
+        <span>Percent off, sale price और savings.</span>
+      </a>
+      <a class="card toolLink" href="/hi/bmi-calculator/">
+        <strong>BMI calculator</strong>
+        <span>Metric + imperial BMI और category.</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+

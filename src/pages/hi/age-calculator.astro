@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const seo = {
+  title: 'Age Calculator (DOB से उम्र) – Online, Fast & Free',
+  description: 'DOB (date of birth) से उम्र निकालें: years, months और days में। “As of” date बदलकर किसी भी तारीख पर age calculate करें।',
+  canonicalPath: '/hi/age-calculator/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const alternates = [
+  { hreflang: 'en', href: `${site}/age-calculator/` },
+  { hreflang: 'hi', href: `${site}/hi/age-calculator/` },
+  { hreflang: 'x-default', href: `${site}/age-calculator/` },
+];
+
+const navItems = [
+  { href: '/hi/percentage-calculator/', label: 'प्रतिशत' },
+  { href: '/hi/age-calculator/', label: 'उम्र' },
+  { href: '/hi/gst-calculator-india/', label: 'GST' },
+  { href: '/hi/emi-calculator/', label: 'EMI' },
+  { href: '/hi/compound-interest-calculator/', label: 'कंपाउंड' },
+  { href: '/hi/date-difference-calculator/', label: 'तारीख' },
+  { href: '/hi/discount-calculator/', label: 'डिस्काउंट' },
+  { href: '/hi/bmi-calculator/', label: 'BMI' },
+  { href: '/', label: 'English' },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Age Calculator (Hindi)',
+    applicationCategory: 'CalculatorApplication',
+    operatingSystem: 'Any',
+    url: `${site}/hi/age-calculator/`,
+    description: seo.description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'DOB से age कैसे calculate करें?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'DOB और “as of” date के बीच calendar difference निकालें: पहले years, फिर months, फिर days.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'क्या मैं past date पर age निकाल सकता/सकती हूँ?',
+        acceptedAnswer: { '@type': 'Answer', text: 'हाँ। “As of date” को किसी भी तारीख पर सेट करें।' },
+      },
+    ],
+  },
+];
+
+const breadcrumbs = [
+  { name: 'Home', path: '/hi/' },
+  { name: 'Age Calculator', path: '/hi/age-calculator/' },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd} breadcrumbs={breadcrumbs} lang="hi" navItems={navItems} alternates={alternates}>
+  <div class="layout">
+    <article class="card contentCard">
+      <Breadcrumbs items={breadcrumbs} />
+      <h1>Age calculator (DOB से उम्र)</h1>
+      <p>DOB डालें और years, months और days में उम्र निकालें।</p>
+
+      <section class="card" style="padding: 14px; margin-top: 12px;">
+        <div class="fieldRow">
+          <div>
+            <label for="dob">Date of birth (DOB)</label>
+            <input id="dob" type="date" />
+          </div>
+          <div>
+            <label for="asOf">As of date</label>
+            <input id="asOf" type="date" />
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap;">
+          <button id="calcBtn" type="button">Calculate age</button>
+          <button id="todayBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Use today</button>
+          <button id="clearBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Clear</button>
+        </div>
+
+        <div id="result" class="result" aria-live="polite">
+          <div class="muted small">Result will appear here.</div>
+        </div>
+      </section>
+
+      <section style="margin-top: 18px;">
+        <h2>Age calculator क्या है?</h2>
+        <p>
+          यह tool आपकी DOB को “as of” date के अनुसार exact age में convert करता है।
+          सिर्फ years नहीं, बल्कि months और days का breakdown भी दिखाता है—जो forms, admissions, jobs और documentation में useful होता है।
+        </p>
+
+        <h2>DOB से age कैसे निकालें?</h2>
+        <p>
+          Age calendar-based होती है। सही तरीका है: पहले पूरे years count करें, फिर पूरे months, और अंत में remaining days।
+          इस method से “total days/365” जैसी गलतियां avoid होती हैं।
+        </p>
+      </section>
+    </article>
+
+    <aside class="card asideCard">
+      <div class="card" style="padding: 12px;">
+        <strong>अन्य tools</strong>
+        <p class="muted small" style="margin-top: 8px;">
+          <a href="/hi/percentage-calculator/">Percentage</a><br />
+          <a href="/hi/date-difference-calculator/">Date difference</a><br />
+          <a href="/hi/bmi-calculator/">BMI</a>
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <script type="module">
+    const $ = (id) => document.getElementById(id);
+    const dobEl = $('dob');
+    const asOfEl = $('asOf');
+    const resultEl = $('result');
+
+    function pad2(n) { return String(n).padStart(2, '0'); }
+    function toISODate(d) { return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; }
+
+    function parseDate(v) {
+      if (!v) return null;
+      const [y, m, d] = v.split('-').map(Number);
+      if (!y || !m || !d) return null;
+      return new Date(y, m - 1, d);
+    }
+
+    function render(html) {
+      resultEl.innerHTML = html;
+      resultEl.classList.remove('fadeIn');
+      void resultEl.offsetWidth;
+      resultEl.classList.add('fadeIn');
+    }
+
+    function diffYMD(from, to) {
+      let y = to.getFullYear() - from.getFullYear();
+      let m = to.getMonth() - from.getMonth();
+      let d = to.getDate() - from.getDate();
+
+      if (d < 0) {
+        const prevMonth = new Date(to.getFullYear(), to.getMonth(), 0);
+        d += prevMonth.getDate();
+        m -= 1;
+      }
+      if (m < 0) {
+        m += 12;
+        y -= 1;
+      }
+      return { y, m, d };
+    }
+
+    function calc() {
+      const dob = parseDate(dobEl.value);
+      const asOf = parseDate(asOfEl.value);
+
+      if (!dob || !asOf) {
+        render('<div class="muted small">DOB और “as of” date दोनों select करें।</div>');
+        return;
+      }
+      if (asOf < dob) {
+        render('<div class="muted small">“As of” date, DOB के बाद/बराबर होना चाहिए।</div>');
+        return;
+      }
+
+      const { y, m, d } = diffYMD(dob, asOf);
+      const totalDays = Math.floor((asOf - dob) / (24 * 60 * 60 * 1000));
+
+      const nextBdayYear =
+        (asOf.getMonth() > dob.getMonth() || (asOf.getMonth() === dob.getMonth() && asOf.getDate() > dob.getDate()))
+          ? asOf.getFullYear() + 1
+          : asOf.getFullYear();
+      const nextBday = new Date(nextBdayYear, dob.getMonth(), dob.getDate());
+      const daysToBday = Math.ceil((nextBday - asOf) / (24 * 60 * 60 * 1000));
+
+      render(`
+        <div>
+          <div><strong>Age:</strong> ${y} years, ${m} months, ${d} days</div>
+          <div class="muted small" style="margin-top:6px;">Total: ${totalDays.toLocaleString()} days</div>
+          <div class="muted small" style="margin-top:6px;">Next birthday: ${toISODate(nextBday)} (${daysToBday} day(s) remaining)</div>
+        </div>
+      `);
+    }
+
+    $('todayBtn').addEventListener('click', () => {
+      const now = new Date();
+      asOfEl.value = toISODate(now);
+      calc();
+    });
+    $('calcBtn').addEventListener('click', calc);
+    $('clearBtn').addEventListener('click', () => {
+      dobEl.value = '';
+      asOfEl.value = toISODate(new Date());
+      render('<div class="muted small">Result will appear here.</div>');
+      dobEl.focus();
+    });
+
+    asOfEl.value = toISODate(new Date());
+    [dobEl, asOfEl].forEach((el) => el.addEventListener('input', () => calc()));
+  </script>
+</BaseLayout>
+

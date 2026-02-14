@@ -1,0 +1,262 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const seo = {
+  title: 'BMI Calculator (बॉडी मास इंडेक्स) – Online, Free',
+  description: 'BMI calculator: height और weight से Body Mass Index निकालें। Metric और imperial units supported, BMI category भी दिखाता है।',
+  canonicalPath: '/hi/bmi-calculator/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const alternates = [
+  { hreflang: 'en', href: `${site}/bmi-calculator/` },
+  { hreflang: 'hi', href: `${site}/hi/bmi-calculator/` },
+  { hreflang: 'x-default', href: `${site}/bmi-calculator/` },
+];
+
+const navItems = [
+  { href: '/hi/percentage-calculator/', label: 'प्रतिशत' },
+  { href: '/hi/age-calculator/', label: 'उम्र' },
+  { href: '/hi/gst-calculator-india/', label: 'GST' },
+  { href: '/hi/emi-calculator/', label: 'EMI' },
+  { href: '/hi/compound-interest-calculator/', label: 'कंपाउंड' },
+  { href: '/hi/date-difference-calculator/', label: 'तारीख' },
+  { href: '/hi/discount-calculator/', label: 'डिस्काउंट' },
+  { href: '/hi/bmi-calculator/', label: 'BMI' },
+  { href: '/', label: 'English' },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'BMI Calculator (Hindi)',
+    applicationCategory: 'HealthApplication',
+    operatingSystem: 'Any',
+    url: `${site}/hi/bmi-calculator/`,
+    description: seo.description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'BMI क्या है?',
+        acceptedAnswer: { '@type': 'Answer', text: 'BMI (Body Mass Index) height और weight पर आधारित screening measure है: BMI = weight / height².' },
+      },
+      {
+        '@type': 'Question',
+        name: 'BMI categories क्या हैं?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Adults के लिए common ranges: underweight <18.5, normal 18.5–24.9, overweight 25–29.9, obese ≥30.' },
+      },
+    ],
+  },
+];
+
+const breadcrumbs = [
+  { name: 'Home', path: '/hi/' },
+  { name: 'BMI Calculator', path: '/hi/bmi-calculator/' },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd} breadcrumbs={breadcrumbs} lang="hi" navItems={navItems} alternates={alternates}>
+  <section class="card contentCard">
+    <Breadcrumbs items={breadcrumbs} />
+    <h1>BMI calculator</h1>
+    <p>Height और weight से BMI निकालें (metric या imperial)।</p>
+
+    <section class="card" style="padding: 14px; margin-top: 12px;">
+      <div class="fieldRow">
+        <div>
+          <label for="unit">Units</label>
+          <select id="unit">
+            <option value="metric" selected>Metric (kg, cm)</option>
+            <option value="imperial">Imperial (lb, ft/in)</option>
+          </select>
+        </div>
+        <div>
+          <label for="decimals">Decimals</label>
+          <select id="decimals">
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="metricFields" class="fieldRow" style="margin-top: 10px;">
+        <div>
+          <label for="weightKg">Weight (kg)</label>
+          <input id="weightKg" inputmode="decimal" placeholder="जैसे 70" />
+        </div>
+        <div>
+          <label for="heightCm">Height (cm)</label>
+          <input id="heightCm" inputmode="decimal" placeholder="जैसे 175" />
+        </div>
+      </div>
+
+      <div id="imperialFields" style="margin-top: 10px; display:none;">
+        <div class="fieldRow">
+          <div>
+            <label for="weightLb">Weight (lb)</label>
+            <input id="weightLb" inputmode="decimal" placeholder="जैसे 154" />
+          </div>
+          <div>
+            <label for="heightFt">Height (ft)</label>
+            <input id="heightFt" inputmode="numeric" placeholder="जैसे 5" />
+          </div>
+        </div>
+        <div class="fieldRow" style="margin-top: 10px;">
+          <div>
+            <label for="heightIn">Height (in)</label>
+            <input id="heightIn" inputmode="numeric" placeholder="जैसे 9" />
+          </div>
+          <div>
+            <label for="gender">Gender (optional)</label>
+            <select id="gender">
+              <option value="" selected>Not specified</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap;">
+        <button id="calcBtn" type="button">Calculate</button>
+        <button id="clearBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Clear</button>
+      </div>
+
+      <div id="result" class="result" aria-live="polite">
+        <div class="muted small">Result will appear here.</div>
+      </div>
+
+      <p class="muted small" style="margin-top: 10px;">
+        Note: BMI एक screening metric है। Medical decision के लिए doctor/experts से सलाह लें।
+      </p>
+    </section>
+
+    <section style="margin-top: 18px;">
+      <h2>BMI क्या है?</h2>
+      <p>
+        BMI (Body Mass Index) height और weight पर आधारित एक simple number है जो adults में weight status का quick idea देता है।
+      </p>
+      <h2>BMI कैसे calculate करें?</h2>
+      <p>
+        Metric: <strong>kg / m²</strong>. Imperial: <strong>703 × lb / in²</strong>. यह tool दोनों units support करता है और category भी दिखाता है।
+      </p>
+      <h2>Formula</h2>
+      <div class="card" style="padding: 14px; margin-bottom: 10px;">
+        <p><strong>Metric</strong>: BMI = kg / m²</p>
+        <p><strong>Imperial</strong>: BMI = 703 × lb / in²</p>
+      </div>
+    </section>
+  </section>
+
+  <script type="module">
+    const $ = (id) => document.getElementById(id);
+    const unitEl = $('unit');
+    const decimalsEl = $('decimals');
+    const metricFields = $('metricFields');
+    const imperialFields = $('imperialFields');
+    const resultEl = $('result');
+
+    const weightKgEl = $('weightKg');
+    const heightCmEl = $('heightCm');
+    const weightLbEl = $('weightLb');
+    const heightFtEl = $('heightFt');
+    const heightInEl = $('heightIn');
+
+    function parseNum(v) {
+      if (!v) return NaN;
+      const n = Number(String(v).replace(/,/g, ''));
+      return Number.isFinite(n) ? n : NaN;
+    }
+    function fmt(n, decimals) {
+      if (!Number.isFinite(n)) return '';
+      return n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+    }
+    function render(html) {
+      resultEl.innerHTML = html;
+      resultEl.classList.remove('fadeIn');
+      void resultEl.offsetWidth;
+      resultEl.classList.add('fadeIn');
+    }
+
+    function category(bmi) {
+      if (bmi < 18.5) return 'Underweight';
+      if (bmi < 25) return 'Normal weight';
+      if (bmi < 30) return 'Overweight';
+      return 'Obesity';
+    }
+
+    function calc() {
+      const decimals = Number(decimalsEl.value || 1);
+      const unit = unitEl.value;
+
+      let bmi = NaN;
+      if (unit === 'metric') {
+        const kg = parseNum(weightKgEl.value);
+        const cm = parseNum(heightCmEl.value);
+        if (!Number.isFinite(kg) || !Number.isFinite(cm) || kg <= 0 || cm <= 0) {
+          render('<div class="muted small">Valid height और weight डालें।</div>');
+          return;
+        }
+        const m = cm / 100;
+        bmi = kg / (m * m);
+      } else {
+        const lb = parseNum(weightLbEl.value);
+        const ft = parseNum(heightFtEl.value);
+        const inch = parseNum(heightInEl.value || '0');
+        if (!Number.isFinite(lb) || !Number.isFinite(ft) || !Number.isFinite(inch) || lb <= 0 || ft <= 0 || inch < 0) {
+          render('<div class="muted small">Valid height और weight डालें।</div>');
+          return;
+        }
+        const totalIn = (ft * 12) + inch;
+        if (totalIn <= 0) {
+          render('<div class="muted small">Height > 0 होना चाहिए।</div>');
+          return;
+        }
+        bmi = 703 * lb / (totalIn * totalIn);
+      }
+
+      const cat = category(bmi);
+      render(`
+        <div>
+          <div><strong>BMI:</strong> ${fmt(bmi, decimals)}</div>
+          <div style="margin-top:6px;"><strong>Category:</strong> ${cat}</div>
+          <div class="muted small" style="margin-top:6px;">Adult ranges: <18.5, 18.5–24.9, 25–29.9, 30+</div>
+        </div>
+      `);
+    }
+
+    function syncUnit() {
+      const unit = unitEl.value;
+      if (unit === 'metric') {
+        metricFields.style.display = '';
+        imperialFields.style.display = 'none';
+      } else {
+        metricFields.style.display = 'none';
+        imperialFields.style.display = '';
+      }
+      calc();
+    }
+
+    $('calcBtn').addEventListener('click', calc);
+    $('clearBtn').addEventListener('click', () => {
+      [weightKgEl, heightCmEl, weightLbEl, heightFtEl, heightInEl].forEach((el) => (el.value = ''));
+      decimalsEl.value = '1';
+      unitEl.value = 'metric';
+      syncUnit();
+      render('<div class="muted small">Result will appear here.</div>');
+      weightKgEl.focus();
+    });
+
+    [unitEl, decimalsEl, weightKgEl, heightCmEl, weightLbEl, heightFtEl, heightInEl].forEach((el) => el.addEventListener('input', () => calc()));
+    unitEl.addEventListener('change', syncUnit);
+    syncUnit();
+  </script>
+</BaseLayout>
+

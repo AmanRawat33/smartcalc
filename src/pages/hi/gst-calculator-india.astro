@@ -1,0 +1,218 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const seo = {
+  title: 'GST Calculator (India) – Add / Remove GST Online',
+  description: 'GST calculator (India): base amount पर GST add करें या GST-inclusive total से GST remove करें। Rates: 0%, 5%, 12%, 18%, 28%.',
+  canonicalPath: '/hi/gst-calculator-india/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const alternates = [
+  { hreflang: 'en', href: `${site}/gst-calculator-india/` },
+  { hreflang: 'hi', href: `${site}/hi/gst-calculator-india/` },
+  { hreflang: 'x-default', href: `${site}/gst-calculator-india/` },
+];
+
+const navItems = [
+  { href: '/hi/percentage-calculator/', label: 'प्रतिशत' },
+  { href: '/hi/age-calculator/', label: 'उम्र' },
+  { href: '/hi/gst-calculator-india/', label: 'GST' },
+  { href: '/hi/emi-calculator/', label: 'EMI' },
+  { href: '/hi/compound-interest-calculator/', label: 'कंपाउंड' },
+  { href: '/hi/date-difference-calculator/', label: 'तारीख' },
+  { href: '/hi/discount-calculator/', label: 'डिस्काउंट' },
+  { href: '/hi/bmi-calculator/', label: 'BMI' },
+  { href: '/', label: 'English' },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'GST Calculator (Hindi)',
+    applicationCategory: 'CalculatorApplication',
+    operatingSystem: 'Any',
+    url: `${site}/hi/gst-calculator-india/`,
+    description: seo.description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'GST add कैसे करें?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Total = base × (1 + rate/100).' },
+      },
+      {
+        '@type': 'Question',
+        name: 'GST remove कैसे करें (inclusive price से)?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Base = total ÷ (1 + rate/100).' },
+      },
+    ],
+  },
+];
+
+const breadcrumbs = [
+  { name: 'Home', path: '/hi/' },
+  { name: 'GST Calculator', path: '/hi/gst-calculator-india/' },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd} breadcrumbs={breadcrumbs} lang="hi" navItems={navItems} alternates={alternates}>
+  <div class="layout">
+    <article class="card contentCard">
+      <Breadcrumbs items={breadcrumbs} />
+      <h1>GST calculator (India)</h1>
+      <p>Base price पर GST जोड़ें या GST-inclusive total से GST हटाएं।</p>
+
+      <section class="card" style="padding: 14px; margin-top: 12px;">
+        <div class="fieldRow">
+          <div>
+            <label for="mode">Mode</label>
+            <select id="mode">
+              <option value="add">Add GST (exclusive → inclusive)</option>
+              <option value="remove">Remove GST (inclusive → exclusive)</option>
+            </select>
+          </div>
+          <div>
+            <label for="rate">GST rate</label>
+            <select id="rate">
+              <option value="0">0%</option>
+              <option value="5">5%</option>
+              <option value="12">12%</option>
+              <option value="18" selected>18%</option>
+              <option value="28">28%</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fieldRow" style="margin-top: 10px;">
+          <div>
+            <label for="amount">Amount</label>
+            <input id="amount" inputmode="decimal" placeholder="जैसे 1000" />
+          </div>
+          <div>
+            <label for="decimals">Decimals</label>
+            <select id="decimals">
+              <option value="0">0</option>
+              <option value="2" selected>2</option>
+              <option value="4">4</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap;">
+          <button id="calcBtn" type="button">Calculate GST</button>
+          <button id="clearBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Clear</button>
+        </div>
+
+        <div id="result" class="result" aria-live="polite">
+          <div class="muted small">Result will appear here.</div>
+        </div>
+      </section>
+
+      <section style="margin-top: 18px;">
+        <h2>GST क्या है?</h2>
+        <p>
+          GST (Goods and Services Tax) एक indirect tax है। कई बार price <strong>exclusive</strong> होती है (GST बाद में add होता है),
+          और कई बार <strong>inclusive</strong> (GST शामिल होता है)। इसलिए base, GST amount और total के बीच conversion के लिए calculator मदद करता है।
+        </p>
+
+        <h2>GST formula</h2>
+        <div class="card" style="padding: 14px; margin-bottom: 10px;">
+          <p><strong>Add GST</strong>: total = base × (1 + rate/100)</p>
+          <p><strong>Remove GST</strong>: base = total ÷ (1 + rate/100)</p>
+          <p><strong>GST amount</strong> = total − base</p>
+        </div>
+      </section>
+    </article>
+
+    <aside class="card asideCard">
+      <div class="card" style="padding: 12px;">
+        <strong>अन्य tools</strong>
+        <p class="muted small" style="margin-top: 8px;">
+          <a href="/hi/emi-calculator/">EMI</a><br />
+          <a href="/hi/discount-calculator/">Discount</a><br />
+          <a href="/hi/percentage-calculator/">Percentage</a>
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <script type="module">
+    const $ = (id) => document.getElementById(id);
+    const modeEl = $('mode');
+    const rateEl = $('rate');
+    const amountEl = $('amount');
+    const decimalsEl = $('decimals');
+    const resultEl = $('result');
+
+    function parseNum(v) {
+      if (!v) return NaN;
+      const n = Number(String(v).replace(/,/g, ''));
+      return Number.isFinite(n) ? n : NaN;
+    }
+    function fmt(n, decimals) {
+      if (!Number.isFinite(n)) return '';
+      return n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+    }
+    function render(html) {
+      resultEl.innerHTML = html;
+      resultEl.classList.remove('fadeIn');
+      void resultEl.offsetWidth;
+      resultEl.classList.add('fadeIn');
+    }
+
+    function calc() {
+      const mode = modeEl.value;
+      const rate = parseNum(rateEl.value);
+      const amount = parseNum(amountEl.value);
+      const decimals = Number(decimalsEl.value || 2);
+
+      if (!Number.isFinite(rate) || !Number.isFinite(amount)) {
+        render('<div class="muted small">Valid amount डालें।</div>');
+        return;
+      }
+      if (rate < 0) {
+        render('<div class="muted small">Rate ≥ 0 होना चाहिए।</div>');
+        return;
+      }
+
+      const r = rate / 100;
+      if (mode === 'add') {
+        const gst = amount * r;
+        const total = amount + gst;
+        render(`
+          <div>
+            <div><strong>Base:</strong> ${fmt(amount, decimals)}</div>
+            <div><strong>GST (${fmt(rate, 0)}%):</strong> ${fmt(gst, decimals)}</div>
+            <div style="margin-top:6px;"><strong>Total:</strong> ${fmt(total, decimals)}</div>
+          </div>
+        `);
+      } else {
+        const base = amount / (1 + r);
+        const gst = amount - base;
+        render(`
+          <div>
+            <div><strong>Total (inclusive):</strong> ${fmt(amount, decimals)}</div>
+            <div><strong>Base (exclusive):</strong> ${fmt(base, decimals)}</div>
+            <div style="margin-top:6px;"><strong>GST (${fmt(rate, 0)}%):</strong> ${fmt(gst, decimals)}</div>
+          </div>
+        `);
+      }
+    }
+
+    $('calcBtn').addEventListener('click', calc);
+    $('clearBtn').addEventListener('click', () => {
+      amountEl.value = '';
+      render('<div class="muted small">Result will appear here.</div>');
+      amountEl.focus();
+    });
+
+    [modeEl, rateEl, amountEl, decimalsEl].forEach((el) => el.addEventListener('input', () => calc()));
+  </script>
+</BaseLayout>
+

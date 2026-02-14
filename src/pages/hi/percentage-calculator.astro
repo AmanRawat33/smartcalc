@@ -1,0 +1,243 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const seo = {
+  title: 'Percentage Calculator (प्रतिशत) – Online, Fast & Free',
+  description: 'प्रतिशत calculator: X% of Y, percent change और “X is what % of Y” तुरंत निकालें।',
+  canonicalPath: '/hi/percentage-calculator/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const alternates = [
+  { hreflang: 'en', href: `${site}/percentage-calculator/` },
+  { hreflang: 'hi', href: `${site}/hi/percentage-calculator/` },
+  { hreflang: 'x-default', href: `${site}/percentage-calculator/` },
+];
+
+const navItems = [
+  { href: '/hi/percentage-calculator/', label: 'प्रतिशत' },
+  { href: '/hi/age-calculator/', label: 'उम्र' },
+  { href: '/hi/gst-calculator-india/', label: 'GST' },
+  { href: '/hi/emi-calculator/', label: 'EMI' },
+  { href: '/hi/compound-interest-calculator/', label: 'कंपाउंड' },
+  { href: '/hi/date-difference-calculator/', label: 'तारीख' },
+  { href: '/hi/discount-calculator/', label: 'डिस्काउंट' },
+  { href: '/hi/bmi-calculator/', label: 'BMI' },
+  { href: '/', label: 'English' },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Percentage Calculator (Hindi)',
+    applicationCategory: 'CalculatorApplication',
+    operatingSystem: 'Any',
+    url: `${site}/hi/percentage-calculator/`,
+    description: seo.description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'X% of Y कैसे निकालें?',
+        acceptedAnswer: { '@type': 'Answer', text: '(X / 100) × Y.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'Percentage increase कैसे निकालें?',
+        acceptedAnswer: { '@type': 'Answer', text: '((to − from) / from) × 100.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'X is what % of Y कैसे निकालें?',
+        acceptedAnswer: { '@type': 'Answer', text: '(X / Y) × 100.' },
+      },
+    ],
+  },
+];
+
+const breadcrumbs = [
+  { name: 'Home', path: '/hi/' },
+  { name: 'Percentage Calculator', path: '/hi/percentage-calculator/' },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd} breadcrumbs={breadcrumbs} lang="hi" navItems={navItems} alternates={alternates}>
+  <div class="layout">
+    <article class="card contentCard">
+      <Breadcrumbs items={breadcrumbs} />
+      <h1>Percentage calculator (प्रतिशत)</h1>
+      <p>प्रतिशत निकालने के लिए mode चुनें और numbers डालें।</p>
+
+      <section class="card" style="padding: 14px; margin-top: 12px;">
+        <div class="fieldRow">
+          <div>
+            <label for="mode">Calculation</label>
+            <select id="mode" name="mode">
+              <option value="of">X% of Y</option>
+              <option value="whatPercent">X is what % of Y</option>
+              <option value="increase">Percentage increase (from → to)</option>
+              <option value="decrease">Percentage decrease (from → to)</option>
+            </select>
+          </div>
+          <div>
+            <label for="decimals">Decimals</label>
+            <select id="decimals" name="decimals">
+              <option value="0">0</option>
+              <option value="2" selected>2</option>
+              <option value="4">4</option>
+              <option value="6">6</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fieldRow" style="margin-top: 10px;">
+          <div>
+            <label for="x">X</label>
+            <input id="x" inputmode="decimal" placeholder="जैसे 15" />
+          </div>
+          <div>
+            <label for="y">Y</label>
+            <input id="y" inputmode="decimal" placeholder="जैसे 200" />
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap;">
+          <button id="calcBtn" type="button">Calculate</button>
+          <button id="swapBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Swap X/Y</button>
+          <button id="clearBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Clear</button>
+        </div>
+
+        <div id="result" class="result" aria-live="polite">
+          <div class="muted small">Result will appear here.</div>
+        </div>
+      </section>
+
+      <section style="margin-top: 18px;">
+        <h2>Percentage क्या है?</h2>
+        <p>
+          <strong>Percentage</strong> किसी value को 100 के हिस्से के रूप में दिखाता है। जैसे 25% का मतलब 100 में से 25।
+          Discounts, marks, growth rate, tax—हर जगह percentages का use होता है।
+        </p>
+
+        <h2>Percentage कैसे calculate करें?</h2>
+        <p>
+          सबसे common cases हैं: <strong>X% of Y</strong>, <strong>percentage change</strong>, और <strong>X is what % of Y</strong>.
+          यह tool तीनों cases को जल्दी calculate करने के लिए बनाया गया है।
+        </p>
+
+        <h2>Percentage formula</h2>
+        <div class="card" style="padding: 14px; margin-bottom: 10px;">
+          <p><strong>X% of Y</strong> = (X / 100) × Y</p>
+          <p><strong>X is what % of Y</strong> = (X / Y) × 100</p>
+          <p><strong>Percent change</strong> = ((to − from) / from) × 100</p>
+        </div>
+
+        <h2>इस online percentage calculator का फायदा</h2>
+        <p>
+          यह तेज़ है, मोबाइल पर अच्छी तरह काम करता है, और typing के साथ auto-calculate करता है।
+          Rounding control (decimals) की वजह से आप reports/invoices के लिए सही formatting रख सकते हैं।
+        </p>
+      </section>
+    </article>
+
+    <aside class="card asideCard">
+      <div class="card" style="padding: 12px;">
+        <strong>अन्य tools</strong>
+        <p class="muted small" style="margin-top: 8px;">
+          <a href="/hi/age-calculator/">Age calculator</a><br />
+          <a href="/hi/emi-calculator/">EMI calculator</a><br />
+          <a href="/hi/discount-calculator/">Discount</a>
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <script type="module">
+    const $ = (id) => document.getElementById(id);
+    const modeEl = $('mode');
+    const decimalsEl = $('decimals');
+    const xEl = $('x');
+    const yEl = $('y');
+    const resultEl = $('result');
+
+    function parseNum(v) {
+      if (!v) return NaN;
+      const n = Number(String(v).replace(/,/g, ''));
+      return Number.isFinite(n) ? n : NaN;
+    }
+
+    function fmt(n, decimals) {
+      if (!Number.isFinite(n)) return '';
+      return n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+    }
+
+    function render(html) {
+      resultEl.innerHTML = html;
+      resultEl.classList.remove('fadeIn');
+      void resultEl.offsetWidth;
+      resultEl.classList.add('fadeIn');
+    }
+
+    function calc() {
+      const mode = modeEl.value;
+      const decimals = Number(decimalsEl.value || 2);
+      const x = parseNum(xEl.value);
+      const y = parseNum(yEl.value);
+
+      if (!Number.isFinite(x) || !Number.isFinite(y)) {
+        render('<div class="muted small">X और Y में valid numbers डालें।</div>');
+        return;
+      }
+
+      if (mode === 'of') {
+        const out = (x / 100) * y;
+        render(`<div><strong>${fmt(x, decimals)}%</strong> of <strong>${fmt(y, decimals)}</strong> = <strong>${fmt(out, decimals)}</strong></div>`);
+        return;
+      }
+
+      if (mode === 'whatPercent') {
+        if (y === 0) {
+          render('<div class="muted small">Y = 0 नहीं हो सकता।</div>');
+          return;
+        }
+        const out = (x / y) * 100;
+        render(`<div><strong>${fmt(x, decimals)}</strong> is <strong>${fmt(out, decimals)}%</strong> of <strong>${fmt(y, decimals)}</strong></div>`);
+        return;
+      }
+
+      if (x === 0) {
+        render('<div class="muted small">From value 0 नहीं हो सकता।</div>');
+        return;
+      }
+
+      const change = ((y - x) / x) * 100;
+      const label = mode === 'increase' ? 'Percentage increase' : 'Percentage decrease';
+      const isDec = mode === 'decrease';
+      const val = isDec ? (x > y ? Math.abs(change) : 0) : (y >= x ? change : 0);
+
+      render(`<div>${label} from <strong>${fmt(x, decimals)}</strong> to <strong>${fmt(y, decimals)}</strong> = <strong>${fmt(val, decimals)}%</strong></div>`);
+    }
+
+    $('calcBtn').addEventListener('click', calc);
+    $('clearBtn').addEventListener('click', () => {
+      xEl.value = '';
+      yEl.value = '';
+      render('<div class="muted small">Result will appear here.</div>');
+      xEl.focus();
+    });
+    $('swapBtn').addEventListener('click', () => {
+      const tmp = xEl.value;
+      xEl.value = yEl.value;
+      yEl.value = tmp;
+      calc();
+    });
+
+    [modeEl, decimalsEl, xEl, yEl].forEach((el) => el.addEventListener('input', () => calc()));
+  </script>
+</BaseLayout>
+

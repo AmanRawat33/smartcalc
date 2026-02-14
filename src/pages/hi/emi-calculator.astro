@@ -1,0 +1,223 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const seo = {
+  title: 'EMI Calculator (लोन EMI) – Monthly EMI, Interest, Total',
+  description: 'मुफ़्त EMI calculator: principal, interest rate और tenure के आधार पर monthly EMI, total interest और total payment निकालें।',
+  canonicalPath: '/hi/emi-calculator/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const alternates = [
+  { hreflang: 'en', href: `${site}/emi-calculator/` },
+  { hreflang: 'hi', href: `${site}/hi/emi-calculator/` },
+  { hreflang: 'x-default', href: `${site}/emi-calculator/` },
+];
+
+const navItems = [
+  { href: '/hi/percentage-calculator/', label: 'प्रतिशत' },
+  { href: '/hi/age-calculator/', label: 'उम्र' },
+  { href: '/hi/gst-calculator-india/', label: 'GST' },
+  { href: '/hi/emi-calculator/', label: 'EMI' },
+  { href: '/hi/compound-interest-calculator/', label: 'कंपाउंड' },
+  { href: '/hi/date-difference-calculator/', label: 'तारीख' },
+  { href: '/hi/discount-calculator/', label: 'डिस्काउंट' },
+  { href: '/hi/bmi-calculator/', label: 'BMI' },
+  { href: '/', label: 'English' },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'EMI Calculator (Hindi)',
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Any',
+    url: `${site}/hi/emi-calculator/`,
+    description: seo.description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'EMI क्या है?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'EMI (Equated Monthly Instalment) लोन चुकाने के लिए हर महीने दिया जाने वाला फिक्स्ड भुगतान है जिसमें principal और interest दोनों शामिल होते हैं।',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'EMI का formula क्या है?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'EMI = P × r × (1+r)^n / ((1+r)^n − 1), जहाँ P=principal, r=monthly interest rate, n=months.',
+        },
+      },
+    ],
+  },
+];
+
+const breadcrumbs = [
+  { name: 'Home', path: '/hi/' },
+  { name: 'EMI Calculator', path: '/hi/emi-calculator/' },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd} breadcrumbs={breadcrumbs} lang="hi" navItems={navItems} alternates={alternates}>
+  <div class="layout">
+    <article class="card contentCard">
+      <Breadcrumbs items={breadcrumbs} />
+      <h1>EMI calculator</h1>
+      <p>लोन की monthly EMI, total interest और total payable amount निकालें।</p>
+
+      <section class="card" style="padding: 14px; margin-top: 12px;">
+        <div class="fieldRow">
+          <div>
+            <label for="principal">Loan amount (Principal)</label>
+            <input id="principal" inputmode="decimal" placeholder="जैसे 500000" />
+          </div>
+          <div>
+            <label for="rate">Interest rate (Annual %)</label>
+            <input id="rate" inputmode="decimal" placeholder="जैसे 10.5" />
+          </div>
+        </div>
+
+        <div class="fieldRow" style="margin-top: 10px;">
+          <div>
+            <label for="tenureYears">Tenure (Years)</label>
+            <input id="tenureYears" inputmode="numeric" placeholder="जैसे 5" />
+          </div>
+          <div>
+            <label for="decimals">Decimals</label>
+            <select id="decimals">
+              <option value="0">0</option>
+              <option value="2" selected>2</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap;">
+          <button id="calcBtn" type="button">Calculate EMI</button>
+          <button id="clearBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Clear</button>
+        </div>
+
+        <div id="result" class="result" aria-live="polite">
+          <div class="muted small">Result will appear here.</div>
+        </div>
+      </section>
+
+      <section style="margin-top: 18px;">
+        <h2>EMI क्या है?</h2>
+        <p>
+          EMI (Equated Monthly Instalment) लोन repayment की एक standard method है जिसमें हर महीने लगभग समान राशि दी जाती है।
+          शुरुआत के महीनों में interest हिस्सा ज्यादा होता है, और जैसे-जैसे समय बढ़ता है, principal repayment बढ़ता जाता है।
+        </p>
+
+        <h2>EMI कैसे calculate करें?</h2>
+        <p>
+          आपको तीन चीज़ें चाहिए: principal (loan amount), annual interest rate, और tenure।
+          यह calculator annual rate को monthly rate में convert करके EMI formula लगाता है और monthly EMI, total interest और total payable दिखाता है।
+        </p>
+
+        <h2>EMI formula</h2>
+        <div class="card" style="padding: 14px; margin-bottom: 10px;">
+          <p class="muted">
+            EMI = P × r × (1+r)^n / ((1+r)^n − 1)<br />
+            <span class="small">P = principal, r = monthly rate, n = months</span>
+          </p>
+        </div>
+      </section>
+    </article>
+
+    <aside class="card asideCard">
+      <div class="card" style="padding: 12px;">
+        <strong>अन्य tools</strong>
+        <p class="muted small" style="margin-top: 8px;">
+          <a href="/hi/compound-interest-calculator/">Compound interest</a><br />
+          <a href="/hi/discount-calculator/">Discount</a><br />
+          <a href="/hi/date-difference-calculator/">Date difference</a>
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <script type="module">
+    const $ = (id) => document.getElementById(id);
+    const pEl = $('principal');
+    const rEl = $('rate');
+    const tEl = $('tenureYears');
+    const dEl = $('decimals');
+    const resultEl = $('result');
+
+    function parseNum(v) {
+      if (!v) return NaN;
+      const n = Number(String(v).replace(/,/g, ''));
+      return Number.isFinite(n) ? n : NaN;
+    }
+    function fmt(n, decimals) {
+      if (!Number.isFinite(n)) return '';
+      return n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+    }
+    function render(html) {
+      resultEl.innerHTML = html;
+      resultEl.classList.remove('fadeIn');
+      void resultEl.offsetWidth;
+      resultEl.classList.add('fadeIn');
+    }
+
+    function calc() {
+      const P = parseNum(pEl.value);
+      const annualRate = parseNum(rEl.value);
+      const years = parseNum(tEl.value);
+      const decimals = Number(dEl.value || 2);
+
+      if (!Number.isFinite(P) || !Number.isFinite(annualRate) || !Number.isFinite(years)) {
+        render('<div class="muted small">Valid principal, rate और tenure भरें।</div>');
+        return;
+      }
+      if (P <= 0 || annualRate < 0 || years <= 0) {
+        render('<div class="muted small">Principal और tenure > 0 होने चाहिए। Rate ≥ 0.</div>');
+        return;
+      }
+
+      const n = Math.round(years * 12);
+      const r = (annualRate / 12) / 100;
+
+      let emi;
+      if (r === 0) {
+        emi = P / n;
+      } else {
+        const pow = Math.pow(1 + r, n);
+        emi = (P * r * pow) / (pow - 1);
+      }
+
+      const total = emi * n;
+      const interest = total - P;
+
+      render(`
+        <div>
+          <div><strong>Monthly EMI:</strong> ${fmt(emi, decimals)}</div>
+          <div style="margin-top:6px;"><strong>Total interest:</strong> ${fmt(interest, decimals)}</div>
+          <div style="margin-top:6px;"><strong>Total payable:</strong> ${fmt(total, decimals)}</div>
+          <div class="muted small" style="margin-top:6px;">Tenure: ${n} months</div>
+        </div>
+      `);
+    }
+
+    $('calcBtn').addEventListener('click', calc);
+    $('clearBtn').addEventListener('click', () => {
+      pEl.value = '';
+      rEl.value = '';
+      tEl.value = '';
+      render('<div class="muted small">Result will appear here.</div>');
+      pEl.focus();
+    });
+
+    [pEl, rEl, tEl, dEl].forEach((el) => el.addEventListener('input', () => calc()));
+  </script>
+</BaseLayout>
+

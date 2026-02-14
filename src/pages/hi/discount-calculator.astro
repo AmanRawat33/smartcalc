@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const seo = {
+  title: 'Discount Calculator (डिस्काउंट) – Percent Off Online',
+  description: 'Discount calculator: original price और discount % से sale price और savings निकालें। या original + final से percent off निकालें।',
+  canonicalPath: '/hi/discount-calculator/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const alternates = [
+  { hreflang: 'en', href: `${site}/discount-calculator/` },
+  { hreflang: 'hi', href: `${site}/hi/discount-calculator/` },
+  { hreflang: 'x-default', href: `${site}/discount-calculator/` },
+];
+
+const navItems = [
+  { href: '/hi/percentage-calculator/', label: 'प्रतिशत' },
+  { href: '/hi/age-calculator/', label: 'उम्र' },
+  { href: '/hi/gst-calculator-india/', label: 'GST' },
+  { href: '/hi/emi-calculator/', label: 'EMI' },
+  { href: '/hi/compound-interest-calculator/', label: 'कंपाउंड' },
+  { href: '/hi/date-difference-calculator/', label: 'तारीख' },
+  { href: '/hi/discount-calculator/', label: 'डिस्काउंट' },
+  { href: '/hi/bmi-calculator/', label: 'BMI' },
+  { href: '/', label: 'English' },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Discount Calculator (Hindi)',
+    applicationCategory: 'CalculatorApplication',
+    operatingSystem: 'Any',
+    url: `${site}/hi/discount-calculator/`,
+    description: seo.description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Percent off कैसे निकालें?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Discount = original × (percent/100). Sale price = original − discount.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'Original और final price से discount % कैसे निकाले?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Percent off = ((original − final) / original) × 100.' },
+      },
+    ],
+  },
+];
+
+const breadcrumbs = [
+  { name: 'Home', path: '/hi/' },
+  { name: 'Discount Calculator', path: '/hi/discount-calculator/' },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd} breadcrumbs={breadcrumbs} lang="hi" navItems={navItems} alternates={alternates}>
+  <section class="card contentCard">
+    <Breadcrumbs items={breadcrumbs} />
+    <h1>Discount calculator</h1>
+    <p>Sale price, savings और percent off जल्दी निकालें।</p>
+
+    <section class="card" style="padding: 14px; margin-top: 12px;">
+      <div class="fieldRow">
+        <div>
+          <label for="original">Original price</label>
+          <input id="original" inputmode="decimal" placeholder="जैसे 1999" />
+        </div>
+        <div>
+          <label for="percent">Discount (%)</label>
+          <input id="percent" inputmode="decimal" placeholder="जैसे 30" />
+        </div>
+      </div>
+
+      <div class="fieldRow" style="margin-top: 10px;">
+        <div>
+          <label for="final">Final price (optional)</label>
+          <input id="final" inputmode="decimal" placeholder="जैसे 1399" />
+        </div>
+        <div>
+          <label for="decimals">Decimals</label>
+          <select id="decimals">
+            <option value="0">0</option>
+            <option value="2" selected>2</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+      </div>
+
+      <p class="muted small" style="margin-top: 10px;">
+        Tip: <strong>original + %</strong> से sale price निकलेगा। <strong>original + final</strong> से percent off निकलेगा।
+      </p>
+
+      <div style="display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap;">
+        <button id="calcBtn" type="button">Calculate</button>
+        <button id="clearBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Clear</button>
+      </div>
+
+      <div id="result" class="result" aria-live="polite">
+        <div class="muted small">Result will appear here.</div>
+      </div>
+    </section>
+
+    <section style="margin-top: 18px;">
+      <h2>Discount formula</h2>
+      <div class="card" style="padding: 14px; margin-bottom: 10px;">
+        <p><strong>Discount amount</strong> = Original × (Percent/100)</p>
+        <p><strong>Sale price</strong> = Original − Discount amount</p>
+        <p><strong>Percent off</strong> = (Discount amount / Original) × 100</p>
+      </div>
+      <p class="muted">
+        Shopping और deal comparison में यह calculator बहुत काम आता है।
+      </p>
+    </section>
+  </section>
+
+  <script type="module">
+    const $ = (id) => document.getElementById(id);
+    const originalEl = $('original');
+    const percentEl = $('percent');
+    const finalEl = $('final');
+    const decimalsEl = $('decimals');
+    const resultEl = $('result');
+
+    function parseNum(v) {
+      if (!v) return NaN;
+      const n = Number(String(v).replace(/,/g, ''));
+      return Number.isFinite(n) ? n : NaN;
+    }
+    function fmt(n, decimals) {
+      if (!Number.isFinite(n)) return '';
+      return n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+    }
+    function render(html) {
+      resultEl.innerHTML = html;
+      resultEl.classList.remove('fadeIn');
+      void resultEl.offsetWidth;
+      resultEl.classList.add('fadeIn');
+    }
+
+    function calc() {
+      const original = parseNum(originalEl.value);
+      const percent = parseNum(percentEl.value);
+      const final = parseNum(finalEl.value);
+      const decimals = Number(decimalsEl.value || 2);
+
+      if (!Number.isFinite(original) || original <= 0) {
+        render('<div class="muted small">Valid original price डालें।</div>');
+        return;
+      }
+
+      if (Number.isFinite(percent) && percent >= 0 && percent <= 100 && !Number.isFinite(final)) {
+        const discount = original * (percent / 100);
+        const sale = original - discount;
+        render(`
+          <div>
+            <div><strong>Discount:</strong> ${fmt(discount, decimals)}</div>
+            <div style="margin-top:6px;"><strong>Sale price:</strong> ${fmt(sale, decimals)}</div>
+            <div class="muted small" style="margin-top:6px;">Percent off: ${fmt(percent, 2)}%</div>
+          </div>
+        `);
+        return;
+      }
+
+      if (Number.isFinite(final) && final >= 0 && final <= original && !Number.isFinite(percent)) {
+        const discount = original - final;
+        const p = (discount / original) * 100;
+        render(`
+          <div>
+            <div><strong>Discount:</strong> ${fmt(discount, decimals)}</div>
+            <div style="margin-top:6px;"><strong>Percent off:</strong> ${fmt(p, 2)}%</div>
+            <div class="muted small" style="margin-top:6px;">Sale price: ${fmt(final, decimals)}</div>
+          </div>
+        `);
+        return;
+      }
+
+      if (Number.isFinite(percent) && percent >= 0 && percent <= 100) {
+        const discount = original * (percent / 100);
+        const sale = original - discount;
+        render(`
+          <div>
+            <div><strong>Discount:</strong> ${fmt(discount, decimals)}</div>
+            <div style="margin-top:6px;"><strong>Sale price:</strong> ${fmt(sale, decimals)}</div>
+          </div>
+        `);
+        return;
+      }
+
+      render('<div class="muted small">Discount % या final price में से कोई एक भरें।</div>');
+    }
+
+    $('calcBtn').addEventListener('click', calc);
+    $('clearBtn').addEventListener('click', () => {
+      originalEl.value = '';
+      percentEl.value = '';
+      finalEl.value = '';
+      decimalsEl.value = '2';
+      render('<div class="muted small">Result will appear here.</div>');
+      originalEl.focus();
+    });
+
+    [originalEl, percentEl, finalEl, decimalsEl].forEach((el) => el.addEventListener('input', () => calc()));
+  </script>
+</BaseLayout>
+

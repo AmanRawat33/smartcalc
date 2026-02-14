@@ -1,0 +1,230 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const seo = {
+  title: 'Compound Interest Calculator (कंपाउंड इंटरेस्ट) – Online',
+  description: 'Compound interest calculator: principal, rate, years और compounding frequency से future value और total interest estimate करें।',
+  canonicalPath: '/hi/compound-interest-calculator/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const alternates = [
+  { hreflang: 'en', href: `${site}/compound-interest-calculator/` },
+  { hreflang: 'hi', href: `${site}/hi/compound-interest-calculator/` },
+  { hreflang: 'x-default', href: `${site}/compound-interest-calculator/` },
+];
+
+const navItems = [
+  { href: '/hi/percentage-calculator/', label: 'प्रतिशत' },
+  { href: '/hi/age-calculator/', label: 'उम्र' },
+  { href: '/hi/gst-calculator-india/', label: 'GST' },
+  { href: '/hi/emi-calculator/', label: 'EMI' },
+  { href: '/hi/compound-interest-calculator/', label: 'कंपाउंड' },
+  { href: '/hi/date-difference-calculator/', label: 'तारीख' },
+  { href: '/hi/discount-calculator/', label: 'डिस्काउंट' },
+  { href: '/hi/bmi-calculator/', label: 'BMI' },
+  { href: '/', label: 'English' },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Compound Interest Calculator (Hindi)',
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Any',
+    url: `${site}/hi/compound-interest-calculator/`,
+    description: seo.description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'Compound interest क्या होता है?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Compound interest में interest, principal के साथ-साथ पहले से earned interest पर भी लगता है (interest on interest).',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Compound interest का formula क्या है?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'A = P × (1 + r/n)^(n×t), जहाँ P=principal, r=annual rate (decimal), n=compounds per year, t=years.',
+        },
+      },
+    ],
+  },
+];
+
+const breadcrumbs = [
+  { name: 'Home', path: '/hi/' },
+  { name: 'Compound Interest', path: '/hi/compound-interest-calculator/' },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd} breadcrumbs={breadcrumbs} lang="hi" navItems={navItems} alternates={alternates}>
+  <section class="card contentCard">
+    <Breadcrumbs items={breadcrumbs} />
+    <h1>Compound interest calculator</h1>
+    <p>Future value, contributions और total interest quickly estimate करें।</p>
+
+    <section class="card" style="padding: 14px; margin-top: 12px;">
+      <div class="fieldRow">
+        <div>
+          <label for="principal">Principal (starting amount)</label>
+          <input id="principal" inputmode="decimal" placeholder="जैसे 10000" />
+        </div>
+        <div>
+          <label for="rate">Annual interest rate (%)</label>
+          <input id="rate" inputmode="decimal" placeholder="जैसे 8" />
+        </div>
+      </div>
+
+      <div class="fieldRow" style="margin-top: 10px;">
+        <div>
+          <label for="years">Time (years)</label>
+          <input id="years" inputmode="decimal" placeholder="जैसे 10" />
+        </div>
+        <div>
+          <label for="compound">Compounding</label>
+          <select id="compound">
+            <option value="1">Yearly</option>
+            <option value="4">Quarterly</option>
+            <option value="12" selected>Monthly</option>
+            <option value="365">Daily</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fieldRow" style="margin-top: 10px;">
+        <div>
+          <label for="contrib">Extra contribution per period (optional)</label>
+          <input id="contrib" inputmode="decimal" placeholder="जैसे 100 (monthly)" />
+        </div>
+        <div>
+          <label for="decimals">Decimals</label>
+          <select id="decimals">
+            <option value="0">0</option>
+            <option value="2" selected>2</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap;">
+        <button id="calcBtn" type="button">Calculate</button>
+        <button id="clearBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Clear</button>
+      </div>
+
+      <div id="result" class="result" aria-live="polite">
+        <div class="muted small">Result will appear here.</div>
+      </div>
+    </section>
+
+    <section style="margin-top: 18px;">
+      <h2>Compound interest कैसे काम करता है?</h2>
+      <p>
+        Compound interest में “interest on interest” होता है, इसलिए long-term में growth तेज़ हो सकती है।
+        Compounding जितना frequent होगा (monthly vs yearly), growth उतनी जल्दी दिखाई दे सकती है।
+      </p>
+
+      <h2>Formula</h2>
+      <div class="card" style="padding: 14px; margin-bottom: 10px;">
+        <p><strong>A</strong> = P × (1 + r/n)^(n×t)</p>
+        <p class="muted small">P=principal, r=annual rate, n=compounds/year, t=years</p>
+      </div>
+    </section>
+  </section>
+
+  <script type="module">
+    const $ = (id) => document.getElementById(id);
+    const pEl = $('principal');
+    const rEl = $('rate');
+    const yEl = $('years');
+    const nEl = $('compound');
+    const cEl = $('contrib');
+    const dEl = $('decimals');
+    const resultEl = $('result');
+
+    function parseNum(v) {
+      if (!v) return NaN;
+      const n = Number(String(v).replace(/,/g, ''));
+      return Number.isFinite(n) ? n : NaN;
+    }
+    function fmt(n, decimals) {
+      if (!Number.isFinite(n)) return '';
+      return n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+    }
+    function render(html) {
+      resultEl.innerHTML = html;
+      resultEl.classList.remove('fadeIn');
+      void resultEl.offsetWidth;
+      resultEl.classList.add('fadeIn');
+    }
+
+    function calc() {
+      const P = parseNum(pEl.value);
+      const ratePct = parseNum(rEl.value);
+      const years = parseNum(yEl.value);
+      const n = parseNum(nEl.value);
+      const contrib = parseNum(cEl.value || '0');
+      const decimals = Number(dEl.value || 2);
+
+      if (!Number.isFinite(P) || !Number.isFinite(ratePct) || !Number.isFinite(years) || !Number.isFinite(n)) {
+        render('<div class="muted small">Valid principal, rate और years डालें।</div>');
+        return;
+      }
+      if (P < 0 || years < 0 || ratePct < 0 || n <= 0) {
+        render('<div class="muted small">Values non-negative होने चाहिए।</div>');
+        return;
+      }
+
+      const r = ratePct / 100;
+      const periods = Math.round(years * n);
+      const perRate = r / n;
+
+      let amount = P;
+      let totalContrib = 0;
+      for (let i = 0; i < periods; i++) {
+        amount = amount * (1 + perRate);
+        if (Number.isFinite(contrib) && contrib > 0) {
+          amount += contrib;
+          totalContrib += contrib;
+        }
+      }
+
+      const ending = amount;
+      const invested = P + totalContrib;
+      const interest = ending - invested;
+
+      render(`
+        <div>
+          <div><strong>Ending balance:</strong> ${fmt(ending, decimals)}</div>
+          <div style="margin-top:6px;"><strong>Total contributions:</strong> ${fmt(totalContrib, decimals)}</div>
+          <div style="margin-top:6px;"><strong>Total interest earned:</strong> ${fmt(interest, decimals)}</div>
+          <div class="muted small" style="margin-top:6px;">Periods: ${periods.toLocaleString()}</div>
+        </div>
+      `);
+    }
+
+    $('calcBtn').addEventListener('click', calc);
+    $('clearBtn').addEventListener('click', () => {
+      pEl.value = '';
+      rEl.value = '';
+      yEl.value = '';
+      cEl.value = '';
+      nEl.value = '12';
+      dEl.value = '2';
+      render('<div class="muted small">Result will appear here.</div>');
+      pEl.focus();
+    });
+
+    [pEl, rEl, yEl, nEl, cEl, dEl].forEach((el) => el.addEventListener('input', () => calc()));
+  </script>
+</BaseLayout>
+

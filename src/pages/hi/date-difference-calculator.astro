@@ -1,0 +1,188 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const seo = {
+  title: 'Date Difference Calculator (दो तारीखों के बीच दिन)',
+  description: 'दो dates के बीच days (दिन) निकालें। Weeks + remaining days भी देखें। Optional inclusive counting.',
+  canonicalPath: '/hi/date-difference-calculator/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const alternates = [
+  { hreflang: 'en', href: `${site}/date-difference-calculator/` },
+  { hreflang: 'hi', href: `${site}/hi/date-difference-calculator/` },
+  { hreflang: 'x-default', href: `${site}/date-difference-calculator/` },
+];
+
+const navItems = [
+  { href: '/hi/percentage-calculator/', label: 'प्रतिशत' },
+  { href: '/hi/age-calculator/', label: 'उम्र' },
+  { href: '/hi/gst-calculator-india/', label: 'GST' },
+  { href: '/hi/emi-calculator/', label: 'EMI' },
+  { href: '/hi/compound-interest-calculator/', label: 'कंपाउंड' },
+  { href: '/hi/date-difference-calculator/', label: 'तारीख' },
+  { href: '/hi/discount-calculator/', label: 'डिस्काउंट' },
+  { href: '/hi/bmi-calculator/', label: 'BMI' },
+  { href: '/', label: 'English' },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Date Difference Calculator (Hindi)',
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    url: `${site}/hi/date-difference-calculator/`,
+    description: seo.description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'दो dates के बीच days कैसे निकालें?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'दोनों dates को timestamps में convert करके subtract करें और milliseconds per day (86,400,000) से divide करें।',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Inclusive count क्या है?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Inclusive में start और end date दोनों count होते हैं (difference में 1 day add हो जाता है)।',
+        },
+      },
+    ],
+  },
+];
+
+const breadcrumbs = [
+  { name: 'Home', path: '/hi/' },
+  { name: 'Date Difference', path: '/hi/date-difference-calculator/' },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd} breadcrumbs={breadcrumbs} lang="hi" navItems={navItems} alternates={alternates}>
+  <section class="card contentCard">
+    <Breadcrumbs items={breadcrumbs} />
+    <h1>Date difference calculator</h1>
+    <p>दो dates के बीच days निकालें (optional inclusive toggle के साथ)।</p>
+
+    <section class="card" style="padding: 14px; margin-top: 12px;">
+      <div class="fieldRow">
+        <div>
+          <label for="from">From date</label>
+          <input id="from" type="date" />
+        </div>
+        <div>
+          <label for="to">To date</label>
+          <input id="to" type="date" />
+        </div>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top: 10px; flex-wrap:wrap; align-items:center;">
+        <label style="display:flex; gap:8px; align-items:center; margin:0;">
+          <input id="inclusive" type="checkbox" style="width:auto;" />
+          <span class="muted small">Inclusive (start + end दोनों count)</span>
+        </label>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap;">
+        <button id="calcBtn" type="button">Calculate</button>
+        <button id="swapBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Swap</button>
+        <button id="clearBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Clear</button>
+      </div>
+
+      <div id="result" class="result" aria-live="polite">
+        <div class="muted small">Result will appear here.</div>
+      </div>
+    </section>
+
+    <section style="margin-top: 18px;">
+      <h2>यह calculator किस लिए useful है?</h2>
+      <p>
+        Deadlines, projects, travel planning, subscriptions और billing cycles—हर जगह days between dates निकालना पड़ता है।
+        यह tool days के साथ-साथ weeks + remaining days का breakdown भी दिखाता है।
+      </p>
+    </section>
+  </section>
+
+  <script type="module">
+    const $ = (id) => document.getElementById(id);
+    const fromEl = $('from');
+    const toEl = $('to');
+    const inclusiveEl = $('inclusive');
+    const resultEl = $('result');
+
+    function pad2(n) { return String(n).padStart(2, '0'); }
+    function toISODate(d) { return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; }
+
+    function parseDate(v) {
+      if (!v) return null;
+      const [y, m, d] = v.split('-').map(Number);
+      if (!y || !m || !d) return null;
+      return new Date(y, m - 1, d);
+    }
+
+    function render(html) {
+      resultEl.innerHTML = html;
+      resultEl.classList.remove('fadeIn');
+      void resultEl.offsetWidth;
+      resultEl.classList.add('fadeIn');
+    }
+
+    function calc() {
+      const from = parseDate(fromEl.value);
+      const to = parseDate(toEl.value);
+      const inclusive = inclusiveEl.checked;
+
+      if (!from || !to) {
+        render('<div class="muted small">दोनों dates select करें।</div>');
+        return;
+      }
+
+      const msPerDay = 24 * 60 * 60 * 1000;
+      let days = Math.round((to - from) / msPerDay);
+      if (inclusive) days += (days >= 0 ? 1 : -1);
+
+      const absDays = Math.abs(days);
+      const weeks = Math.floor(absDays / 7);
+      const remDays = absDays % 7;
+
+      render(`
+        <div>
+          <div><strong>Days:</strong> ${days.toLocaleString()}</div>
+          <div class="muted small" style="margin-top:6px;">Equivalent: ${weeks} week(s) and ${remDays} day(s)</div>
+        </div>
+      `);
+    }
+
+    $('calcBtn').addEventListener('click', calc);
+    $('swapBtn').addEventListener('click', () => {
+      const tmp = fromEl.value;
+      fromEl.value = toEl.value;
+      toEl.value = tmp;
+      calc();
+    });
+    $('clearBtn').addEventListener('click', () => {
+      fromEl.value = '';
+      toEl.value = '';
+      inclusiveEl.checked = false;
+      render('<div class="muted small">Result will appear here.</div>');
+      fromEl.focus();
+    });
+
+    const today = new Date();
+    const fromDefault = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
+    fromEl.value = toISODate(fromDefault);
+    toEl.value = toISODate(today);
+    [fromEl, toEl, inclusiveEl].forEach((el) => el.addEventListener('input', () => calc()));
+    calc();
+  </script>
+</BaseLayout>
+

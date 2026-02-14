@@ -1,0 +1,7 @@
+---
+// Set `PUBLIC_GOOGLE_SITE_VERIFICATION` (without quotes) in your environment
+// Example: PUBLIC_GOOGLE_SITE_VERIFICATION=abc123...xyz
+const token = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION as string | undefined;
+---
+{token ? <meta name="google-site-verification" content={token} /> : null}
+

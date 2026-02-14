@@ -1,0 +1,11 @@
+---
+// Intentionally render nothing unless ads are explicitly enabled.
+// This avoids “optimized-for-ads” signals during AdSense review.
+const enabled = (import.meta.env.PUBLIC_ENABLE_ADS as string | undefined) === 'true';
+
+const { height = 250 } = Astro.props as { height?: number };
+---
+{enabled ? (
+  <div style={`min-height:${height}px;`} aria-hidden="true"></div>
+) : null}
+

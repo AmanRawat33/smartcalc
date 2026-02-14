@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const seo = {
+  title: 'Contact – QuickTools',
+  description: 'Contact QuickTools for feedback, suggestions, or bug reports.',
+  canonicalPath: '/contact/',
+};
+
+const breadcrumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Contact', path: '/contact/' },
+];
+---
+<BaseLayout seo={seo} breadcrumbs={breadcrumbs}>
+  <section class="card contentCard">
+    <h1>Contact</h1>
+    <p>
+      Send feedback, request a new calculator, or report an issue.
+    </p>
+
+    <div class="card" style="padding: 14px; margin-top: 12px;">
+      <p class="muted small" style="margin: 0;">
+        If you face any issue or have some suggestions, drop a mail to hello.simpletools@gmail.com
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+

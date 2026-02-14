@@ -1,0 +1,215 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+
+const seo = {
+  title: 'Discount Calculator (Percent Off) – Free Online',
+  description: 'Free discount calculator to find final price, savings, and percent off. Calculate discount amount and sale price instantly.',
+  canonicalPath: '/discount-calculator/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Discount Calculator',
+    applicationCategory: 'CalculatorApplication',
+    operatingSystem: 'Any',
+    url: `${site}/discount-calculator/`,
+    description: seo.description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'How do you calculate percent off?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Discount = original × (percent/100). Sale price = original − discount.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'How do you calculate what percentage discount you got?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Percent off = (discount / original) × 100.' },
+      },
+    ],
+  },
+];
+
+const breadcrumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Discount Calculator', path: '/discount-calculator/' },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd} breadcrumbs={breadcrumbs}>
+  <section class="card contentCard">
+    <Breadcrumbs items={breadcrumbs} />
+    <h1>Discount calculator</h1>
+    <p>Calculate sale price and savings from an original price and discount percentage.</p>
+
+    <section class="card" style="padding: 14px; margin-top: 12px;">
+      <div class="fieldRow">
+        <div>
+          <label for="original">Original price</label>
+          <input id="original" inputmode="decimal" placeholder="e.g. 1999" />
+        </div>
+        <div>
+          <label for="percent">Discount (%)</label>
+          <input id="percent" inputmode="decimal" placeholder="e.g. 30" />
+        </div>
+      </div>
+
+      <div class="fieldRow" style="margin-top: 10px;">
+        <div>
+          <label for="final">Final price (optional)</label>
+          <input id="final" inputmode="decimal" placeholder="e.g. 1399" />
+        </div>
+        <div>
+          <label for="decimals">Decimals</label>
+          <select id="decimals">
+            <option value="0">0</option>
+            <option value="2" selected>2</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+      </div>
+
+      <p class="muted small" style="margin-top: 10px;">
+        Tip: Enter <strong>original + percent</strong> to calculate final price. Or enter <strong>original + final</strong> to calculate percent off.
+      </p>
+
+      <div style="display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap;">
+        <button id="calcBtn" type="button">Calculate</button>
+        <button id="clearBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Clear</button>
+      </div>
+
+      <div id="result" class="result" aria-live="polite">
+        <div class="muted small">Result will appear here.</div>
+      </div>
+    </section>
+
+    <section style="margin-top: 18px;">
+      <h2>What is a discount?</h2>
+      <p>
+        A <strong>discount</strong> is a reduction from the original price. Discounts are often shown as a percentage (like 20% off)
+        or as a fixed amount (like $10 off). A discount calculator helps you quickly compute the final price and savings without mistakes.
+      </p>
+
+      <h2>How to calculate discount</h2>
+      <p>
+        If a product costs <strong>Original</strong> and the discount is <strong>Percent</strong>, then:
+        <strong>Discount amount = Original × (Percent/100)</strong> and <strong>Sale price = Original − Discount</strong>.
+        If you instead know the final price, you can compute the discount percentage using:
+        <strong>Percent off = (Discount / Original) × 100</strong>.
+      </p>
+
+      <h2>Discount formula</h2>
+      <div class="card" style="padding: 14px; margin-bottom: 10px;">
+        <p><strong>Discount amount</strong> = Original × (Percent/100)</p>
+        <p><strong>Sale price</strong> = Original − Discount amount</p>
+        <p><strong>Percent off</strong> = (Discount amount / Original) × 100</p>
+      </div>
+
+      <h2>Why use this online discount calculator?</h2>
+      <p>
+        It’s useful for shopping, invoicing, and quick comparisons between deals. You can also reverse-calculate the percent off
+        if you only know the original price and final price.
+      </p>
+    </section>
+  </section>
+
+  <script type="module">
+    const $ = (id) => document.getElementById(id);
+    const originalEl = $('original');
+    const percentEl = $('percent');
+    const finalEl = $('final');
+    const decimalsEl = $('decimals');
+    const resultEl = $('result');
+
+    function parseNum(v) {
+      if (!v) return NaN;
+      const n = Number(String(v).replace(/,/g, ''));
+      return Number.isFinite(n) ? n : NaN;
+    }
+    function fmt(n, decimals) {
+      if (!Number.isFinite(n)) return '';
+      return n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+    }
+    function render(html) {
+      resultEl.innerHTML = html;
+      resultEl.classList.remove('fadeIn');
+      void resultEl.offsetWidth;
+      resultEl.classList.add('fadeIn');
+    }
+
+    function calc() {
+      const original = parseNum(originalEl.value);
+      const percent = parseNum(percentEl.value);
+      const final = parseNum(finalEl.value);
+      const decimals = Number(decimalsEl.value || 2);
+
+      if (!Number.isFinite(original) || original <= 0) {
+        render('<div class="muted small">Enter a valid original price.</div>');
+        return;
+      }
+
+      // Mode A: original + percent
+      if (Number.isFinite(percent) && percent >= 0 && percent <= 100 && !Number.isFinite(final)) {
+        const discount = original * (percent / 100);
+        const sale = original - discount;
+        render(`
+          <div>
+            <div><strong>Discount:</strong> ${fmt(discount, decimals)}</div>
+            <div style="margin-top:6px;"><strong>Sale price:</strong> ${fmt(sale, decimals)}</div>
+            <div class="muted small" style="margin-top:6px;">Percent off: ${fmt(percent, 2)}%</div>
+          </div>
+        `);
+        return;
+      }
+
+      // Mode B: original + final (compute percent)
+      if (Number.isFinite(final) && final >= 0 && final <= original && !Number.isFinite(percent)) {
+        const discount = original - final;
+        const p = (discount / original) * 100;
+        render(`
+          <div>
+            <div><strong>Discount:</strong> ${fmt(discount, decimals)}</div>
+            <div style="margin-top:6px;"><strong>Percent off:</strong> ${fmt(p, 2)}%</div>
+            <div class="muted small" style="margin-top:6px;">Sale price: ${fmt(final, decimals)}</div>
+          </div>
+        `);
+        return;
+      }
+
+      // If both percent and final are present, just compute all (prefer percent if valid)
+      if (Number.isFinite(percent) && percent >= 0 && percent <= 100) {
+        const discount = original * (percent / 100);
+        const sale = original - discount;
+        render(`
+          <div>
+            <div><strong>Discount:</strong> ${fmt(discount, decimals)}</div>
+            <div style="margin-top:6px;"><strong>Sale price:</strong> ${fmt(sale, decimals)}</div>
+          </div>
+        `);
+        return;
+      }
+
+      render('<div class="muted small">Enter either discount % or final price (not necessarily both).</div>');
+    }
+
+    $('calcBtn').addEventListener('click', calc);
+    $('clearBtn').addEventListener('click', () => {
+      originalEl.value = '';
+      percentEl.value = '';
+      finalEl.value = '';
+      decimalsEl.value = '2';
+      render('<div class="muted small">Result will appear here.</div>');
+      originalEl.focus();
+    });
+
+    [originalEl, percentEl, finalEl, decimalsEl].forEach((el) => el.addEventListener('input', () => calc()));
+  </script>
+</BaseLayout>
+

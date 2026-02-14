@@ -1,0 +1,260 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+
+const seo = {
+  title: 'Percentage Calculator Online (Fast & Free)',
+  description: 'Use this percentage calculator online to find X% of Y, percentage increase/decrease, and what percent X is of Y.',
+  canonicalPath: '/percentage-calculator/',
+};
+
+const site = Astro.site?.toString() ?? 'https://example.com';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Percentage Calculator Online',
+    applicationCategory: 'CalculatorApplication',
+    operatingSystem: 'Any',
+    url: `${site}/percentage-calculator/`,
+    description: seo.description,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'How do I calculate X% of Y?',
+        acceptedAnswer: { '@type': 'Answer', text: '(X / 100) × Y.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'How do I calculate percentage increase?',
+        acceptedAnswer: { '@type': 'Answer', text: '((to − from) / from) × 100.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'How do I calculate what percent X is of Y?',
+        acceptedAnswer: { '@type': 'Answer', text: '(X / Y) × 100.' },
+      },
+    ],
+  },
+];
+
+const breadcrumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'Percentage Calculator', path: '/percentage-calculator/' },
+];
+---
+<BaseLayout seo={seo} jsonLd={jsonLd} breadcrumbs={breadcrumbs}>
+  <div class="layout">
+    <article class="card contentCard">
+      <Breadcrumbs items={breadcrumbs} />
+      <h1>Percentage calculator online</h1>
+      <p>
+        Calculate percentage values instantly. Choose a mode below and enter numbers.
+      </p>
+
+      <section class="card" style="padding: 14px; margin-top: 12px;">
+        <div class="fieldRow">
+          <div>
+            <label for="mode">Calculation</label>
+            <select id="mode" name="mode">
+              <option value="of">X% of Y</option>
+              <option value="whatPercent">X is what % of Y</option>
+              <option value="increase">Percentage increase (from → to)</option>
+              <option value="decrease">Percentage decrease (from → to)</option>
+            </select>
+          </div>
+          <div>
+            <label for="decimals">Decimals</label>
+            <select id="decimals" name="decimals">
+              <option value="0">0</option>
+              <option value="2" selected>2</option>
+              <option value="4">4</option>
+              <option value="6">6</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fieldRow" style="margin-top: 10px;">
+          <div>
+            <label for="x">X</label>
+            <input id="x" inputmode="decimal" placeholder="e.g. 15" />
+          </div>
+          <div>
+            <label for="y">Y</label>
+            <input id="y" inputmode="decimal" placeholder="e.g. 200" />
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top: 12px; flex-wrap:wrap;">
+          <button id="calcBtn" type="button">Calculate</button>
+          <button id="swapBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Swap X/Y</button>
+          <button id="clearBtn" type="button" style="background: rgba(0,0,0,0.18); border-color: var(--border);">Clear</button>
+        </div>
+
+        <div id="result" class="result" aria-live="polite">
+          <div class="muted small">Result will appear here.</div>
+        </div>
+      </section>
+
+      <div style="margin-top: 12px;">
+        <AdSlot label="In-content ad" height={250} />
+      </div>
+
+      <section style="margin-top: 18px;">
+        <h2>Examples</h2>
+        <p class="muted">Quick examples to validate results:</p>
+        <div class="card" style="padding: 14px;">
+          <p><strong>15% of 200</strong> = 30</p>
+          <p><strong>30 is what % of 200</strong> = 15%</p>
+          <p><strong>Increase from 80 to 100</strong> = 25%</p>
+        </div>
+      </section>
+
+      <section class="faq" style="margin-top: 18px;">
+        <h2>FAQ</h2>
+        <h3>How do I calculate X% of Y?</h3>
+        <p>Use: (X / 100) × Y.</p>
+
+        <h3>How do I calculate percentage increase?</h3>
+        <p>Use: ((to − from) / from) × 100.</p>
+
+        <h3>How do I calculate what percent X is of Y?</h3>
+        <p>Use: (X / Y) × 100.</p>
+      </section>
+
+      <section style="margin-top: 18px;">
+        <h2>What is a percentage?</h2>
+        <p>
+          A <strong>percentage</strong> is a way to express a number as a fraction of 100. For example, 25% means 25 out of 100.
+          Percentages are used everywhere: discounts, exam marks, business growth, taxes, and analytics.
+          Because the “base” is always 100, percentages make it easy to compare values across different scales.
+        </p>
+
+        <h2>How to calculate percentage</h2>
+        <p>
+          Most percentage problems fit into one of these patterns:
+          <strong>X% of Y</strong>, <strong>percentage change</strong>, or <strong>what percent</strong>.
+          This page supports all three, so you don’t have to remember which formula to use each time.
+        </p>
+
+        <h2>Percentage formulas</h2>
+        <div class="card" style="padding: 14px; margin-bottom: 10px;">
+          <p><strong>X% of Y</strong> = (X / 100) × Y</p>
+          <p><strong>X is what % of Y</strong> = (X / Y) × 100</p>
+          <p><strong>Percent change</strong> = ((to − from) / from) × 100</p>
+        </div>
+
+        <h2>Why use this online percentage calculator?</h2>
+        <p>
+          It’s optimized for speed and mobile use, and it recalculates instantly as you type.
+          Use it for common real-life tasks like computing discounts, profit/loss, mark percentages, and growth rates.
+          The “decimals” option helps you control rounding when you need exact formatting for reports or invoices.
+        </p>
+      </section>
+    </article>
+
+    <aside class="card asideCard">
+      <AdSlot label="Sidebar ad" height={600} />
+      <div class="card" style="padding: 12px; margin-top: 12px;">
+        <strong>Try other tools</strong>
+        <p class="muted small" style="margin-top: 8px;">
+          <a href="/age-calculator/">Age calculator</a><br />
+          <a href="/gst-calculator-india/">GST calculator India</a>
+        </p>
+      </div>
+    </aside>
+  </div>
+
+  <script type="module">
+    const $ = (id) => document.getElementById(id);
+    const modeEl = $('mode');
+    const decimalsEl = $('decimals');
+    const xEl = $('x');
+    const yEl = $('y');
+    const resultEl = $('result');
+
+    function parseNum(v) {
+      if (!v) return NaN;
+      const n = Number(String(v).replace(/,/g, ''));
+      return Number.isFinite(n) ? n : NaN;
+    }
+
+    function fmt(n, decimals) {
+      if (!Number.isFinite(n)) return '';
+      return n.toLocaleString(undefined, { maximumFractionDigits: decimals, minimumFractionDigits: decimals });
+    }
+
+    function render(html) {
+      resultEl.innerHTML = html;
+      resultEl.classList.remove('fadeIn');
+      // restart animation
+      void resultEl.offsetWidth;
+      resultEl.classList.add('fadeIn');
+    }
+
+    function calc() {
+      const mode = modeEl.value;
+      const decimals = Number(decimalsEl.value || 2);
+      const x = parseNum(xEl.value);
+      const y = parseNum(yEl.value);
+
+      if (!Number.isFinite(x) || !Number.isFinite(y)) {
+        render('<div class="muted small">Enter valid numbers for X and Y.</div>');
+        return;
+      }
+
+      if (mode === 'of') {
+        const out = (x / 100) * y;
+        render(`<div><strong>${fmt(x, decimals)}%</strong> of <strong>${fmt(y, decimals)}</strong> = <strong>${fmt(out, decimals)}</strong></div>`);
+        return;
+      }
+
+      if (mode === 'whatPercent') {
+        if (y === 0) {
+          render('<div class="muted small">Y cannot be 0 for this calculation.</div>');
+          return;
+        }
+        const out = (x / y) * 100;
+        render(`<div><strong>${fmt(x, decimals)}</strong> is <strong>${fmt(out, decimals)}%</strong> of <strong>${fmt(y, decimals)}</strong></div>`);
+        return;
+      }
+
+      // increase/decrease use x=from, y=to
+      if (x === 0) {
+        render('<div class="muted small">From value cannot be 0 for percent change.</div>');
+        return;
+      }
+
+      const change = ((y - x) / x) * 100;
+      const label = mode === 'increase' ? 'Percentage increase' : 'Percentage decrease';
+      const isDec = mode === 'decrease';
+      const val = isDec ? (x > y ? Math.abs(change) : 0) : (y >= x ? change : 0);
+
+      render(`<div>${label} from <strong>${fmt(x, decimals)}</strong> to <strong>${fmt(y, decimals)}</strong> = <strong>${fmt(val, decimals)}%</strong></div>`);
+    }
+
+    $('calcBtn').addEventListener('click', calc);
+    $('clearBtn').addEventListener('click', () => {
+      xEl.value = '';
+      yEl.value = '';
+      render('<div class="muted small">Result will appear here.</div>');
+      xEl.focus();
+    });
+    $('swapBtn').addEventListener('click', () => {
+      const tmp = xEl.value;
+      xEl.value = yEl.value;
+      yEl.value = tmp;
+      calc();
+    });
+
+    // Auto-calc on input for quick UX (still lightweight)
+    [modeEl, decimalsEl, xEl, yEl].forEach((el) => el.addEventListener('input', () => calc()));
+  </script>
+</BaseLayout>
+
