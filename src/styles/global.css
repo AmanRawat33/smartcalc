@@ -63,6 +63,48 @@ a:hover { text-decoration: underline; }
   opacity: 0.92;
 }
 
+.navToggle {
+  display: none;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.18);
+}
+
+@media (max-width: 860px) {
+  .nav {
+    align-items: flex-start;
+  }
+
+  .navToggle {
+    display: inline-flex;
+    margin-left: auto;
+  }
+
+  /* Collapsible menu: keep links in DOM (crawlable), just visually collapsed */
+  .navLinks {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: rgba(0,0,0,0.12);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-2px);
+    transition: max-height 200ms ease, opacity 160ms ease, transform 160ms ease;
+  }
+
+  body[data-nav-open="true"] .navLinks {
+    max-height: 420px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .card {
   background: var(--card);
   border: 1px solid var(--border);

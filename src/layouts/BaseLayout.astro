@@ -107,7 +107,16 @@ const breadcrumbsJsonLd = (() => {
           <span class="brandDot" aria-hidden="true"></span>
           <span>SmartCalc</span>
         </a>
-        <nav class="navLinks" aria-label="Primary">
+        <button
+          class="navToggle"
+          type="button"
+          aria-label="Open menu"
+          aria-controls="primaryNav"
+          aria-expanded="false"
+        >
+          Menu
+        </button>
+        <nav class="navLinks" id="primaryNav" aria-label="Primary">
           {nav.map((i) => <a href={i.href}>{i.label}</a>)}
         </nav>
       </header>
@@ -121,6 +130,31 @@ const breadcrumbsJsonLd = (() => {
         </span>
       </footer>
     </div>
+
+    <script is:inline>
+      (() => {
+        const btn = document.querySelector('.navToggle');
+        const nav = document.getElementById('primaryNav');
+        if (!btn || !nav) return;
+
+        const setOpen = (open) => {
+          document.body.dataset.navOpen = open ? 'true' : 'false';
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        };
+
+        setOpen(false);
+
+        btn.addEventListener('click', () => {
+          const open = document.body.dataset.navOpen === 'true';
+          setOpen(!open);
+        });
+
+        nav.addEventListener('click', (e) => {
+          const target = e.target;
+          if (target && target.tagName === 'A') setOpen(false);
+        });
+      })();
+    </script>
   </body>
 </html>
 
