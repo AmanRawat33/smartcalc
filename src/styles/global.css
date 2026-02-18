@@ -74,15 +74,19 @@ a:hover { text-decoration: underline; }
 @media (max-width: 860px) {
   .nav {
     align-items: flex-start;
+    justify-content: flex-start;
   }
 
   .navToggle {
     display: inline-flex;
     margin-left: auto;
+    order: 2;
   }
 
   /* Collapsible menu: keep links in DOM (crawlable), just visually collapsed */
   .navLinks {
+    order: 3;
+    flex-basis: 100%;
     width: 100%;
     flex-direction: column;
     gap: 10px;
