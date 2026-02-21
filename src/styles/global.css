@@ -38,6 +38,27 @@ main {
   flex: 1;
 }
 
+.siteFooter {
+  margin-top: 28px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 14px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+}
+
+.siteFooter a {
+  opacity: 0.95;
+}
+
+.siteFooter a:hover {
+  opacity: 1;
+}
+
 .nav {
   display: flex;
   align-items: center;
