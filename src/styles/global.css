@@ -29,6 +29,13 @@ a:hover { text-decoration: underline; }
   max-width: var(--max);
   margin: 0 auto;
   padding: 28px 18px 60px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
 }
 
 .nav {
