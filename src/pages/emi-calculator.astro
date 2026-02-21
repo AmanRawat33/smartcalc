@@ -4,7 +4,7 @@ import AdSlot from '../components/AdSlot.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 
 const seo = {
-  title: 'EMI Calculator Online (Loan EMI) – Monthly Payment, Interest, Total',
+  title: 'EMI Calculator: Loan EMI, Interest & Total Payment | SmartCalc',
   description: 'Free EMI calculator online to compute loan EMI, total interest, and total payment using principal, interest rate and tenure.',
   canonicalPath: '/emi-calculator/',
 };
@@ -39,6 +39,30 @@ const jsonLd = [
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'EMI = P × r × (1+r)^n / ((1+r)^n − 1), where P=principal, r=monthly interest rate, n=number of months.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What factors affect EMI the most?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Principal, interest rate, and tenure. Higher rate or principal increases EMI; longer tenure usually reduces EMI but increases total interest.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How do I calculate total interest on a loan?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Total interest = (EMI × number of months) − principal.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Does EMI change over time?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'For fixed-rate loans, EMI stays constant but the split between interest and principal changes. For floating-rate loans, EMI may change when the rate changes.',
         },
       },
     ],
@@ -98,7 +122,28 @@ const breadcrumbs = [
       </div>
 
       <section style="margin-top: 18px;">
-        <h2>EMI formula</h2>
+        <h2>What is an EMI calculator?</h2>
+        <p>
+          An <strong>EMI calculator</strong> helps you estimate your monthly loan repayment (EMI), total interest payable,
+          and the total amount you will pay over the full tenure. It’s most useful for comparing different rates and tenures
+          before choosing a loan (home loan, personal loan, car loan, etc.).
+        </p>
+
+        <h2>How to calculate EMI online</h2>
+        <p>
+          You need three inputs: loan amount (principal), annual interest rate, and tenure. This calculator converts the annual
+          rate to a monthly rate and calculates EMI over total months.
+        </p>
+
+        <h3>Step-by-step</h3>
+        <div class="card" style="padding: 14px; margin-bottom: 10px;">
+          <p><strong>1) Enter principal</strong>: the loan amount you borrow.</p>
+          <p><strong>2) Enter annual interest rate</strong>: for example 10.5 (not 0.105).</p>
+          <p><strong>3) Enter tenure in years</strong>: it converts to months automatically.</p>
+          <p><strong>4) Read results</strong>: EMI (monthly), total interest, total payable.</p>
+        </div>
+
+        <h2>EMI calculation formula</h2>
         <div class="card" style="padding: 14px;">
           <p class="muted">
             EMI = P × r × (1+r)^n / ((1+r)^n − 1)<br />
@@ -108,6 +153,14 @@ const breadcrumbs = [
       </section>
 
       <section style="margin-top: 18px;">
+        <h2>Example EMI calculation</h2>
+        <div class="card" style="padding: 14px; margin-bottom: 10px;">
+          <p class="muted small" style="margin: 0;">
+            Example: principal ₹5,00,000 @ 10.5% for 5 years → this tool will output monthly EMI + total interest + total payable.
+            (Exact value depends on rounding; use the calculator for precise figures.)
+          </p>
+        </div>
+
         <h2>What is EMI?</h2>
         <p>
           <strong>EMI</strong> stands for Equated Monthly Instalment. It’s the fixed amount you pay every month to repay a loan.
@@ -115,21 +168,45 @@ const breadcrumbs = [
           Over time, the principal repayment increases.
         </p>
 
-        <h2>How to calculate EMI</h2>
+        <h2>What affects EMI the most?</h2>
         <p>
-          You need three inputs: loan amount (principal), annual interest rate, and tenure.
-          This calculator converts the annual rate to a monthly rate and applies the standard EMI formula.
-          The output includes your monthly EMI, total interest payable, and total amount payable.
+          EMI depends mainly on <strong>principal</strong>, <strong>interest rate</strong>, and <strong>tenure</strong>.
+          Increasing tenure usually reduces EMI but increases total interest. A small change in interest rate can have a big impact
+          on long tenures (like home loans), so it’s useful to compare scenarios quickly.
         </p>
+
+        <h2>When should you use this tool?</h2>
+        <p>
+          Use it when comparing loan offers, deciding tenure vs EMI tradeoffs, estimating affordability, or checking how a rate change
+          impacts monthly cash flow. For floating-rate loans, treat results as an estimate at the current rate.
+        </p>
+
+        <h2>Fixed vs floating rate (important note)</h2>
+        <p>
+          If your loan is <strong>fixed-rate</strong>, EMI typically stays constant and the amortization split changes over time.
+          For <strong>floating-rate</strong> loans, the lender may revise your EMI or tenure when interest rates change.
+          This calculator assumes a constant rate for estimation.
+        </p>
+
+        <h2>Common mistakes (and how to avoid them)</h2>
+        <div class="card" style="padding: 14px; margin-bottom: 10px;">
+          <p><strong>Using monthly rate as annual rate</strong>: always enter annual % (e.g. 10.5).</p>
+          <p><strong>Comparing only EMI</strong>: also compare total interest and total payable.</p>
+          <p><strong>Ignoring tenure effect</strong>: longer tenure looks cheaper monthly but costs more overall.</p>
+        </div>
 
         <h2>Why use this EMI calculator online?</h2>
         <p>
-          It saves time and reduces mistakes compared to manual calculations.
-          You can quickly compare different interest rates or tenures to see how they impact EMI and total interest.
+          It saves time and reduces mistakes compared to manual calculations. You can quickly compare different interest rates or tenures
+          to see how they impact EMI and total interest.
         </p>
 
-        <h2>FAQ</h2>
-        <p class="muted small">Common questions are covered in the FAQ section above for rich results.</p>
+        <h2>FAQs</h2>
+        <div class="card" style="padding: 14px;">
+          <p><strong>How to compute total interest?</strong> Total interest = (EMI × months) − principal.</p>
+          <p><strong>Does prepayment reduce EMI?</strong> It can reduce EMI or tenure depending on lender rules; either way it usually reduces total interest.</p>
+          <p><strong>Is this exact?</strong> It’s a close estimate for fixed-rate loans. Fees, insurance, and varying rates can change real schedules.</p>
+        </div>
       </section>
     </article>
 

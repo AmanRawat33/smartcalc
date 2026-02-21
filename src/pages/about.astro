@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const seo = {
-  title: 'About – SmartCalc',
+  title: 'About SmartCalc: Fast, Free Online Calculators',
   description: 'About SmartCalc: fast, simple online calculators for everyday use.',
   canonicalPath: '/about/',
 };
@@ -15,15 +15,21 @@ const breadcrumbs = [
 <BaseLayout seo={seo} breadcrumbs={breadcrumbs}>
   <section class="card contentCard">
     <h1>About SmartCalc</h1>
+    <h2>What is SmartCalc?</h2>
     <p>
       SmartCalc is a lightweight collection of online calculators built for speed and clarity. The goal is simple:
       provide useful tools that work well on mobile, load fast, and don’t overwhelm you with unnecessary steps.
     </p>
+
+    <h2>What you can do on this site</h2>
+    <p>
+      We publish practical calculators (finance, math, and utility) with clear explanations, formulas, and examples.
+      Over time, we’ll add more tools based on real search demand.
+    </p>
+
+    <h2>Feedback</h2>
     <p>
       If you have a suggestion for a new calculator or want to report an issue, use the Contact page.
-    </p>
-    <p class="muted small">
-      Tip: for better SEO and correct canonicals, set your domain in `SITE_URL` during deploy.
     </p>
     <p class="muted small" style="margin-top: 14px;">
       SmartCalc is independently built and maintained to provide fast, free online calculators for everyday use.

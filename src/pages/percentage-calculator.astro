@@ -4,7 +4,7 @@ import AdSlot from '../components/AdSlot.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 
 const seo = {
-  title: 'Percentage Calculator Online (Fast & Free)',
+  title: 'Percentage Calculator Online: Percent Change & % of | SmartCalc',
   description: 'Use this percentage calculator online to find X% of Y, percentage increase/decrease, and what percent X is of Y.',
   canonicalPath: '/percentage-calculator/',
 };
@@ -39,6 +39,16 @@ const jsonLd = [
         '@type': 'Question',
         name: 'How do I calculate what percent X is of Y?',
         acceptedAnswer: { '@type': 'Answer', text: '(X / Y) × 100.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'How do I calculate percentage decrease?',
+        acceptedAnswer: { '@type': 'Answer', text: '((from − to) / from) × 100.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'How do I convert a percentage to a decimal?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Divide by 100. Example: 12.5% = 0.125.' },
       },
     ],
   },
@@ -143,12 +153,33 @@ const breadcrumbs = [
           This page supports all three, so you don’t have to remember which formula to use each time.
         </p>
 
+        <h2>Step-by-step (quick method)</h2>
+        <div class="card" style="padding: 14px; margin-bottom: 10px;">
+          <p><strong>1) X% of Y</strong>: convert X% to decimal (X/100), then multiply by Y.</p>
+          <p><strong>2) X is what % of Y</strong>: divide X by Y, then multiply by 100.</p>
+          <p><strong>3) Percent change</strong>: difference ÷ original, then × 100.</p>
+        </div>
+
         <h2>Percentage formulas</h2>
         <div class="card" style="padding: 14px; margin-bottom: 10px;">
           <p><strong>X% of Y</strong> = (X / 100) × Y</p>
           <p><strong>X is what % of Y</strong> = (X / Y) × 100</p>
           <p><strong>Percent change</strong> = ((to − from) / from) × 100</p>
         </div>
+
+        <h2>Common mistakes (avoid them)</h2>
+        <div class="card" style="padding: 14px; margin-bottom: 10px;">
+          <p><strong>Mixing up base</strong>: “What percent is X of Y” uses Y as the base (denominator).</p>
+          <p><strong>Using the wrong original</strong>: percent change always divides by the <em>from</em> value.</p>
+          <p><strong>Rounding too early</strong>: keep more decimals until the final answer if accuracy matters.</p>
+        </div>
+
+        <h2>Percentage to decimal (and back)</h2>
+        <p>
+          Convert percentage to decimal by dividing by 100: 12.5% → 0.125.
+          Convert decimal to percentage by multiplying by 100: 0.125 → 12.5%.
+          This is useful when working with interest rates, growth rates, and spreadsheet formulas.
+        </p>
 
         <h2>Why use this online percentage calculator?</h2>
         <p>

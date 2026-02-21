@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
 const seo = {
-  title: 'Discount Calculator (डिस्काउंट) – Percent Off Online',
+  title: 'Discount Calculator: Percent Off और Sale Price | SmartCalc',
   description: 'Discount calculator: original price और discount % से sale price और savings निकालें। या original + final से percent off निकालें।',
   canonicalPath: '/hi/discount-calculator/',
 };
@@ -67,6 +67,18 @@ const breadcrumbs = [
     <h1>Discount calculator</h1>
     <p>Sale price, savings और percent off जल्दी निकालें।</p>
 
+    <h2>Discount calculator क्या है?</h2>
+    <p class="muted">
+      यह tool original price और discount के आधार पर final (sale) price निकालता है। आप reverse भी कर सकते हैं:
+      original और final price से percent off निकालें।
+    </p>
+
+    <h2>How to use (कैसे use करें)</h2>
+    <h3>Option A: Discount % से sale price</h3>
+    <p class="muted small">Original price + Discount (%) भरें। Final price optional छोड़ दें।</p>
+    <h3>Option B: Final price से percent off</h3>
+    <p class="muted small">Original price + Final price भरें। Discount (%) खाली छोड़ दें।</p>
+
     <section class="card" style="padding: 14px; margin-top: 12px;">
       <div class="fieldRow">
         <div>
@@ -115,6 +127,17 @@ const breadcrumbs = [
         <p><strong>Sale price</strong> = Original − Discount amount</p>
         <p><strong>Percent off</strong> = (Discount amount / Original) × 100</p>
       </div>
+      <h2>Examples</h2>
+      <div class="card" style="padding: 14px; margin-bottom: 10px;">
+        <p><strong>₹2000 पर 25% off</strong> → discount ₹500, sale ₹1500</p>
+        <p><strong>Original ₹2000, final ₹1500</strong> → 25% off</p>
+      </div>
+
+      <h2>FAQs</h2>
+      <h3>Discount amount कैसे निकलेगा?</h3>
+      <p class="muted small">Original × (Percent/100).</p>
+      <h3>Percent off कैसे निकलेगा?</h3>
+      <p class="muted small">((Original − Final) / Original) × 100.</p>
       <p class="muted">
         Shopping और deal comparison में यह calculator बहुत काम आता है।
       </p>

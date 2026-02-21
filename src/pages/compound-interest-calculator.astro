@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 
 const seo = {
-  title: 'Compound Interest Calculator (Free Online)',
+  title: 'Compound Interest Calculator: Future Value & Interest | SmartCalc',
   description: 'Free compound interest calculator to estimate future value, total interest, and ending balance with principal, rate, time and compounding frequency.',
   canonicalPath: '/compound-interest-calculator/',
 };
@@ -46,6 +46,22 @@ const jsonLd = [
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'Simple interest is calculated only on the principal. Compound interest grows on principal plus previously earned interest.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How does compounding frequency affect returns?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'More frequent compounding (monthly/daily) can increase the ending balance slightly versus yearly compounding at the same annual rate.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How do periodic contributions affect compound growth?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Adding a fixed contribution each period increases the invested amount and can significantly boost the ending balance over time.',
         },
       },
     ],
@@ -119,6 +135,13 @@ const breadcrumbs = [
     </section>
 
     <section style="margin-top: 18px;">
+      <h2>What is a compound interest calculator?</h2>
+      <p>
+        A <strong>compound interest calculator</strong> estimates how your money can grow over time when interest is added to your balance
+        and future interest is earned on that new balance. It’s useful for savings goals, investment planning, and comparing
+        different rates or compounding frequencies.
+      </p>
+
       <h2>What is compound interest?</h2>
       <p>
         <strong>Compound interest</strong> means you earn interest on your original principal and on the interest you’ve already earned.
@@ -126,7 +149,7 @@ const breadcrumbs = [
         (monthly vs yearly), the faster the balance can grow, assuming the same annual rate.
       </p>
 
-      <h2>How to calculate compound interest</h2>
+      <h2>How to calculate compound interest online</h2>
       <p>
         For a one-time deposit, the standard formula is:
         <strong>A = P × (1 + r/n)^(n×t)</strong>.
@@ -135,11 +158,46 @@ const breadcrumbs = [
         This calculator also supports optional contributions each period (for example, adding a fixed amount every month).
       </p>
 
-      <h2>Compound interest formula</h2>
+      <h2>Step-by-step (how to use this calculator)</h2>
+      <div class="card" style="padding: 14px; margin-bottom: 10px;">
+        <p><strong>1) Enter principal</strong>: your starting amount.</p>
+        <p><strong>2) Enter annual rate</strong>: the yearly interest rate in %.</p>
+        <p><strong>3) Choose time</strong>: number of years you’ll keep the money invested.</p>
+        <p><strong>4) Choose compounding</strong>: yearly/quarterly/monthly/daily.</p>
+        <p><strong>5) Optional contributions</strong>: if you add money each period, enter that amount.</p>
+      </div>
+
+      <h2>Compound interest calculation formula</h2>
       <div class="card" style="padding: 14px; margin-bottom: 10px;">
         <p><strong>Final amount</strong>: A = P × (1 + r/n)^(n×t)</p>
         <p><strong>Total interest</strong>: A − P (ignoring contributions)</p>
       </div>
+
+      <h2>Example compound interest calculation</h2>
+      <div class="card" style="padding: 14px; margin-bottom: 10px;">
+        <p class="muted small" style="margin: 0;">
+          Example: ₹10,000 at 8% for 10 years (monthly compounding) → use the calculator to get the ending balance and total interest.
+          Add monthly contributions (optional) to model regular investing.
+        </p>
+      </div>
+
+      <h2>Compounding frequency: does it matter?</h2>
+      <p>
+        Yes, but usually the difference is small for typical rates. Monthly compounding can produce a slightly higher ending balance
+        than yearly compounding because interest is added to the base more often. Over long time periods, even small differences can add up.
+      </p>
+
+      <h2>Rule of 72 (quick estimate)</h2>
+      <p>
+        A popular shortcut is the <strong>Rule of 72</strong>: approximate years to double ≈ 72 ÷ (annual rate in %).
+        For example, at 8% it’s roughly 9 years. It’s an estimate, but useful for quick mental checks.
+      </p>
+
+      <h2>When should you use this tool?</h2>
+      <p>
+        Use it when planning savings targets, comparing investment options, estimating future value, or understanding how rate changes
+        and contributions affect long-term growth.
+      </p>
 
       <h2>Why use this online compound interest calculator?</h2>
       <p>
@@ -147,6 +205,13 @@ const breadcrumbs = [
         It’s useful for planning savings goals, evaluating investment growth assumptions, and understanding how long-term
         compounding changes outcomes even with small rate differences.
       </p>
+
+      <h2>FAQs</h2>
+      <div class="card" style="padding: 14px;">
+        <p><strong>Does compounding daily always help?</strong> It can increase returns slightly versus monthly/yearly at the same annual rate.</p>
+        <p><strong>How do contributions affect growth?</strong> Regular contributions increase invested amount and can significantly increase ending balance.</p>
+        <p><strong>Is this exact?</strong> It’s an estimate based on constant rate and fixed compounding; real products may have fees and varying rates.</p>
+      </div>
     </section>
   </section>
 

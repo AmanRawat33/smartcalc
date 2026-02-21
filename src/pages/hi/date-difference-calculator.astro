@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 
 const seo = {
-  title: 'Date Difference Calculator (दो तारीखों के बीच दिन)',
+  title: 'Date Difference: दो तारीखों के बीच दिन | SmartCalc',
   description: 'दो dates के बीच days (दिन) निकालें। Weeks + remaining days भी देखें। Optional inclusive counting.',
   canonicalPath: '/hi/date-difference-calculator/',
 };
@@ -73,6 +73,20 @@ const breadcrumbs = [
     <h1>Date difference calculator</h1>
     <p>दो dates के बीच days निकालें (optional inclusive toggle के साथ)।</p>
 
+    <h2>Date difference calculator क्या है?</h2>
+    <p class="muted">
+      यह tool दो calendar dates के बीच का difference बताता है—मुख्य रूप से days में, और साथ में weeks + remaining days का breakdown भी।
+      Deadlines, travel planning, subscriptions, और project timelines में यह बहुत useful होता है।
+    </p>
+
+    <h2>How to use (कैसे use करें)</h2>
+    <h3>Step 1</h3>
+    <p class="muted small">From date और To date select करें।</p>
+    <h3>Step 2</h3>
+    <p class="muted small">अगर start और end दोनों count करने हैं तो <strong>Inclusive</strong> toggle ON करें।</p>
+    <h3>Step 3</h3>
+    <p class="muted small">Days और weeks breakdown result में दिखेगा।</p>
+
     <section class="card" style="padding: 14px; margin-top: 12px;">
       <div class="fieldRow">
         <div>
@@ -104,6 +118,25 @@ const breadcrumbs = [
     </section>
 
     <section style="margin-top: 18px;">
+      <h2>Formula / Explanation</h2>
+      <p>
+        Internally, calculator दोनों dates को time value (timestamp) में convert करके subtract करता है और
+        milliseconds per day (86,400,000) से divide करके days निकालता है।
+        Inclusive mode में 1 day add किया जाता है ताकि start और end दोनों count हों।
+      </p>
+
+      <h2>Examples</h2>
+      <div class="card" style="padding: 14px; margin-bottom: 10px;">
+        <p><strong>2026-01-01 to 2026-01-31</strong> → 30 days (exclusive)</p>
+        <p class="muted small" style="margin:0;">Inclusive mode ON → 31 days</p>
+      </div>
+
+      <h2>FAQs</h2>
+      <h3>Inclusive count क्या है?</h3>
+      <p class="muted small">Inclusive में start + end दोनों dates count होते हैं, इसलिए 1 day add होता है।</p>
+      <h3>Negative days क्यों आते हैं?</h3>
+      <p class="muted small">अगर To date, From date से पहले है, तो difference negative होगा। Swap कर लें।</p>
+
       <h2>यह calculator किस लिए useful है?</h2>
       <p>
         Deadlines, projects, travel planning, subscriptions और billing cycles—हर जगह days between dates निकालना पड़ता है।

@@ -4,7 +4,7 @@ import AdSlot from '../components/AdSlot.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 
 const seo = {
-  title: 'GST Calculator Online India (Add / Remove GST)',
+  title: 'GST Calculator India: Add/Remove GST (0–28%) | SmartCalc',
   description: 'GST calculator online India to add GST to base price or remove GST from inclusive price. Supports 0%, 5%, 12%, 18%, 28% rates.',
   canonicalPath: '/gst-calculator-india/',
 };
@@ -34,6 +34,24 @@ const jsonLd = [
         '@type': 'Question',
         name: 'How to remove GST from an inclusive price?',
         acceptedAnswer: { '@type': 'Answer', text: 'Base = total ÷ (1 + rate/100).' },
+      },
+      {
+        '@type': 'Question',
+        name: 'What is GST inclusive vs exclusive price?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Exclusive means GST is added on top of the base price. Inclusive means the shown price already includes GST.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How do you calculate GST amount?',
+        acceptedAnswer: { '@type': 'Answer', text: 'GST amount = total − base (after adding/removing GST using the correct formula).' },
+      },
+      {
+        '@type': 'Question',
+        name: 'What are common GST rates in India?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Common slabs: 0%, 5%, 12%, 18%, and 28% (varies by goods/services).' },
       },
     ],
   },
@@ -121,32 +139,89 @@ const breadcrumbs = [
       </section>
 
       <section style="margin-top: 18px;">
-        <h2>What is GST in India?</h2>
+        <h2>What is a GST calculator?</h2>
         <p>
-          <strong>GST</strong> (Goods and Services Tax) is an indirect tax used in India. Many prices are shown either as
-          <strong>exclusive</strong> (GST added later) or <strong>inclusive</strong> (GST already included).
-          That’s why people commonly search for a GST calculator to quickly convert between base price, GST amount, and total.
+          A <strong>GST calculator</strong> helps you convert between <strong>base price</strong>, <strong>GST amount</strong>, and <strong>total price</strong>.
+          In India, prices are commonly shown either as <strong>exclusive</strong> (GST added on top) or <strong>inclusive</strong> (GST already included).
+          This tool supports both so you can calculate quickly and avoid billing mistakes.
         </p>
 
-        <h2>How to calculate GST</h2>
+        <h2>What is GST in India?</h2>
+        <p>
+          <strong>GST</strong> (Goods and Services Tax) is an indirect tax used in India. On invoices you may see GST split into components like
+          <strong>CGST</strong> + <strong>SGST</strong> (intra-state) or <strong>IGST</strong> (inter-state). This calculator computes the overall GST amount
+          from the base/total; you can split it later as per invoice rules.
+        </p>
+
+        <h2>GST inclusive vs GST exclusive price</h2>
+        <p>
+          In real life, confusion usually comes from whether the price is <strong>inclusive</strong> or <strong>exclusive</strong> of GST:
+          if you see a base price and GST is added at checkout or on an invoice line item, that’s <strong>exclusive</strong>.
+          If you see a final price (MRP or “total”) where GST is already embedded, that’s <strong>inclusive</strong>.
+          This page supports both scenarios so you can move between base, GST, and total without manual mistakes.
+        </p>
+
+        <h2>How to calculate GST online</h2>
         <p>
           If you have a base amount and want the total price, you <strong>add GST</strong>.
           If you have the final bill amount and want the original base amount, you <strong>remove GST</strong>.
           This tool supports the most common GST slabs: 0%, 5%, 12%, 18%, and 28%.
         </p>
 
-        <h2>GST formulas</h2>
+        <h3>Step-by-step</h3>
+        <div class="card" style="padding: 14px; margin-bottom: 10px;">
+          <p><strong>1) Pick the correct GST rate</strong>: 0/5/12/18/28 (based on your invoice/product category).</p>
+          <p><strong>2) Choose price type</strong>: base (exclusive) or total (inclusive).</p>
+          <p><strong>3) Select mode</strong>: Add GST (exclusive → inclusive) or Remove GST (inclusive → exclusive).</p>
+          <p><strong>4) Enter the amount</strong> and read base, GST and total.</p>
+        </div>
+
+        <h2>Common GST slabs (quick reference)</h2>
+        <div class="card" style="padding: 14px; margin-bottom: 10px;">
+          <p class="muted small" style="margin: 0;">
+            0% · 5% · 12% · 18% · 28% — the applicable rate depends on the good/service category.
+            Use the correct slab from your invoice/product category for accurate results.
+          </p>
+        </div>
+
+        <h2>GST calculation formula</h2>
         <div class="card" style="padding: 14px; margin-bottom: 10px">
           <p><strong>Add GST</strong>: total = base × (1 + rate/100)</p>
           <p><strong>Remove GST</strong>: base = total ÷ (1 + rate/100)</p>
           <p><strong>GST amount</strong> = total − base</p>
         </div>
 
+        <h2>Example GST calculation</h2>
+        <div class="card" style="padding: 14px; margin-bottom: 10px;">
+          <p><strong>Base ₹1000 @ 18% GST</strong></p>
+          <p class="muted small" style="margin:0;">GST = 1000 × 18% = ₹180, Total = ₹1180</p>
+        </div>
+
+        <h2>Common mistakes (avoid them)</h2>
+        <p>
+          The most common manual error is removing GST by doing <em>GST = total × rate%</em>.
+          That’s incorrect for inclusive prices because the GST is already embedded in the total.
+          Use the “Remove GST” mode which divides by $(1 + rate/100)$ first.
+        </p>
+
+        <h2>When should you use this tool?</h2>
+        <p>
+          Use it when creating invoices/quotations, checking GST-inclusive totals, verifying MRP vs base price, or quickly auditing a bill.
+          It’s also useful when you know only the total and need the base amount for bookkeeping.
+        </p>
+
         <h2>Why use this GST calculator online?</h2>
         <p>
           It reduces calculation errors, especially when removing GST from an inclusive price (this is where most manual mistakes happen).
           Use it for invoicing, budgeting, and quick checks when you see GST-inclusive MRP or totals.
         </p>
+
+        <h2>More FAQs</h2>
+        <div class="card" style="padding: 14px;">
+          <p><strong>How to calculate GST amount from base?</strong> Multiply base by rate% to get GST, then add to base.</p>
+          <p><strong>How to calculate base price from total?</strong> Divide total by (1 + rate/100).</p>
+          <p><strong>Which decimals should I use?</strong> Use 2 decimals for most billing; use more decimals for internal checks.</p>
+        </div>
       </section>
     </article>
 
